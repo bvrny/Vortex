@@ -1,0 +1,33 @@
+# KiCad temporary files and backups
+# KiCad temporary files and backups
+*.bak
+*.bck
+*-bak
+*-backups/
+*.tmp
+*~
+_autosave-*
+
+# KiCad lock files
+*.lck
+
+# KiCad user-specific project settings
+*.kicad_prl
+
+# Netlists and routing files (if generated locally)
+*.net
+*.dsn
+*.ses
+
+# Footprint cache
+fp-info-cache
+
+# Firmware compiled binaries and IDE hidden folders
+.pio/
+.vscode/
+build/
+*.bin
+*.elf
+*.hex
+
+.history
