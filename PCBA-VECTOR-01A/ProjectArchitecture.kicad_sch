@@ -2,7 +2,151 @@
 	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
-	(uuid "92f55a05-b511-4d1f-8984-be07bcaf83d9")
+	(uuid "bbd581c8-c838-44f7-889a-08cb06d1228b")
 	(paper "A4")
 	(lib_symbols)
+	(sheet
+		(at 69.85 62.23)
+		(size 20.32 8.89)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.3048)
+			(type solid)
+			(color 132 0 0 1)
+		)
+		(fill
+			(color 255 255 194 1)
+		)
+		(uuid "642ef5c7-b62f-459c-a626-822a0bd0e6ba")
+		(property "Sheetname" "Power Supply"
+			(at 69.85 61.4422 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "PowerSupply.kicad_sch"
+			(at 69.85 71.7808 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCBA-VECTOR-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 149.86 74.93)
+		(size 13.97 21.59)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.3048)
+			(type solid)
+			(color 132 0 0 1)
+		)
+		(fill
+			(color 255 255 194 1)
+		)
+		(uuid "94a9512e-43db-46c1-ac13-e6cd3054aee1")
+		(property "Sheetname" "MCU"
+			(at 149.86 74.2184 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MCU.kicad_sch"
+			(at 149.86 97.1046 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCBA-VECTOR-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 83.82)
+		(size 16.51 11.43)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.3048)
+			(type solid)
+			(color 132 0 0 1)
+		)
+		(fill
+			(color 255 255 194 1)
+		)
+		(uuid "9e54abbd-664b-4fc3-9d4b-0a895e48b852")
+		(property "Sheetname" "Comm's"
+			(at 76.2 83.0322 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Comms.kicad_sch"
+			(at 76.2 95.9108 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCBA-VECTOR-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff"
+					(page "6")
+				)
+			)
+		)
+	)
 )

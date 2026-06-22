@@ -240,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "1.0.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -466,7 +466,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
@@ -485,7 +485,9 @@
   },
   "libraries": {
     "pinned_footprint_libs": [],
-    "pinned_symbol_libs": []
+    "pinned_symbol_libs": [
+      "Bvrny's_library"
+    ]
   },
   "meta": {
     "filename": "PCBA-FLUX-01A.kicad_pro",
@@ -720,7 +722,7 @@
         "pattern": "+24V"
       },
       {
-        "netclass": "Power +24V",
+        "netclass": "Power +12V",
         "pattern": "+12V"
       },
       {
@@ -897,8 +899,12 @@
         "uuid": "27d049f2-0962-4d9e-88e1-d5cca5250f12"
       }
     ],
-    "used_designators": "R1-17,U1,Q1-4,D1-4,C1-7,#PWR2-4,#PWR6-10",
-    "variants": []
+    "used_designators": "TH1-3,R1-75,U1-10,Q1-16,#PWR1-83,#PWR127-128,#PWR153-156,C1-94,C102-103,D1-13",
+    "variants": [
+      {
+        "name": "No DNP components"
+      }
+    ]
   },
   "sheets": [
     [
@@ -914,8 +920,20 @@
       "Project Architecture"
     ],
     [
+      "7353cc83-07e4-4a85-8f8d-3d36127a9e81",
+      "Power Input"
+    ],
+    [
       "caf97dc2-dff1-4b91-982f-70d9a2001652",
-      "Phase A"
+      "Phase U"
+    ],
+    [
+      "15387549-54d2-4e59-b4cd-1d2aae829a6d",
+      "Phase V"
+    ],
+    [
+      "b9a06704-c2e8-49e4-890a-5ccbb7eb7803",
+      "Phase W"
     ],
     [
       "7334f2a4-a630-4075-91c9-034ca44ce391",

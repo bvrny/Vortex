@@ -1,0 +1,1320 @@
+%=====================================================================
+%  Design of a Three-Phase N-Channel MOSFET Inverter and Analog
+%  Front-End for a 2.5-5 kW Battery-Powered BLDC/PMSM Drive with
+%  Field-Oriented Control.
+%
+%  Combined English design report (IEEEtran). Compile with pdflatex
+%  (pdflatex -> pdflatex). Requires IEEEtran.cls, circuitikz, siunitx.
+%=====================================================================
+\documentclass[journal,onecolumn,11pt]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[siunitx]{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=3pt}
+\usepackage[hidelinks,colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{url}
+\urlstyle{sf}
+
+\usepackage{textcomp}
+\sisetup{detect-all,per-mode=symbol,group-digits=integer}
+% Default \ohm glyph is missing in the pdflatex Times TS1 encoding and prints as
+% a tofu box; force the unit to use the (always-available) math capital omega.
+\DeclareSIUnit{\ohm}{\ensuremath{\Omega}}
+
+% Convenience macros
+\newcommand{\Vbus}{V_{\mathrm{bus}}}
+\newcommand{\Rshunt}{R_{\mathrm{sh}}}
+\newcommand{\Iph}{I_{\mathrm{ph}}}
+\newcommand{\fsw}{f_{\mathrm{sw}}}
+\newcommand{\Rdson}{R_{DS(\mathrm{on})}}
+
+% Left-aligned wrapping column for tabularx
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+
+\title{Design of a Three-Phase N-Channel MOSFET Inverter and Analog Front-End
+for a \mbox{2.5--5\,kW} Battery-Powered BLDC/PMSM Drive with Field-Oriented Control}
+
+\author{Hardware Design Report\\[2pt]
+\small Power stage: Infineon IPT015N10N5 (\SI{100}{\volt}, \SI{1.5}{\milli\ohm})
+OptiMOS\textsuperscript{\texttrademark}\,5 MOSFET $+$ Texas Instruments UCC27211A-Q1 half-bridge gate driver\\
+\small Controller: STMicroelectronics STM32G473RCT6 \quad
+Switching frequency: \SI{40}{\kilo\hertz} \quad Control: field-oriented control (FOC) with space-vector PWM}
+
+\markboth{Hardware Design Report: Three-Phase BLDC/PMSM Inverter and Analog Front-End}{}
+\maketitle
+
+%=====================================================================
+\begin{abstract}
+This report presents the component-level design of the power stage, the gate-drive stage, and
+the analog front-end of a three-phase voltage-source inverter for a brushless DC / permanent-magnet
+synchronous (BLDC/PMSM) motor under field-oriented control (FOC) with space-vector pulse-width
+modulation (SVPWM). The drive is battery-powered: a \SI{24}{\volt} pack whose terminal voltage
+ranges from \SI{19}{\volt} to \SI{30}{\volt} with state of charge, delivering up to \SI{2.5}{\kilo\watt};
+and a \SI{48}{\volt} pack ranging from \SI{39}{\volt} to \SI{60}{\volt}, delivering up to \SI{5}{\kilo\watt}.
+The variation of the pack voltage is central to the design: the \emph{highest} bus voltage
+(\SI{60}{\volt}) sets the blocking and $\mathrm{d}v/\mathrm{d}t$ stresses, while the \emph{lowest}
+bus voltage (\SI{19}{\volt}) produces the largest current for a given power and therefore the
+worst case for conduction loss and for the current-sense chain. Each switch position uses two
+Infineon IPT015N10N5 \SI{100}{\volt} OptiMOS\textsuperscript{\texttrademark}\,5 MOSFETs in
+parallel (four devices per half-bridge leg, twelve total), and each leg is driven by one Texas
+Instruments UCC27211A-Q1 \SI{120}{\volt}, \SI{3.7}{\ampere}/\SI{4.5}{\ampere} half-bridge gate
+driver supplied at \SI{12}{\volt}. The report (i) verifies the electrical compatibility of the
+selected devices across the full battery-voltage range; (ii) derives the gate-drive passive
+network --- bootstrap capacitor, bootstrap-diode requirement, asymmetric gate resistors,
+gate--source pull-downs, and decoupling --- from published design equations; and (iii) designs
+the three remaining analog blocks of the input stage: the in-line shunt phase-current-sense
+chain, the DC-bus and phase voltage-sense chains, and a do-not-populate RC snubber. The
+worst-case continuous phase current is derived as $\approx\SI{119}{\ampere}$ RMS
+($\approx\SI{169}{\ampere}$ peak) and used to size a \SI{0.1}{\milli\ohm} metal-element shunt read
+by a Texas Instruments INA240A2 current-sense amplifier with enhanced PWM rejection. Every
+quantitative claim and every design equation is supported by a primary source.
+\end{abstract}
+
+\begin{IEEEkeywords}
+BLDC, PMSM, field-oriented control (FOC), space-vector PWM, MOSFET gate driver, bootstrap,
+asymmetric gate resistor, in-line current sensing, shunt resistor, INA240, voltage divider,
+STM32G4, RC snubber, single ground.
+\end{IEEEkeywords}
+
+%=====================================================================
+\section{Introduction and Scope}
+\IEEEPARstart{T}{he} target system is a non-isolated three-phase voltage-source inverter, built
+on a single shared ground, intended to drive any BLDC/PMSM motor of roughly \SI{0.5}{} to
+\SI{5}{\kilo\watt} under field-oriented control with space-vector PWM and Hall-effect rotor-position
+sensing. The controller is an STMicroelectronics STM32G473RCT6 --- a motor-control microcontroller
+based on an Arm\textsuperscript{\textregistered} Cortex\textsuperscript{\textregistered}-M4 core
+that integrates up to five \mbox{12-bit} analog-to-digital converters (ADCs), operational
+amplifiers usable as a programmable-gain amplifier (PGA) or unity-gain follower with their outputs
+routed internally to an ADC, analog comparators, advanced motor-control timers, and a voltage
+reference buffer (VREFBUF)~\cite{stm32g473ds}. The gate driver is the Texas Instruments
+UCC27211A-Q1~\cite{ucc27211}, and each switch is an Infineon OptiMOS\textsuperscript{\texttrademark}\,5
+IPT015N10N5 (\SI{100}{\volt}, \SI{1.5}{\milli\ohm})~\cite{ipt015ds,ipt015part}. The microcontroller,
+the gate driver, and the choice of power MOSFET are fixed inputs to this work.
+
+The report addresses, in one place, both the power/gate-drive stage and the analog input stage:
+\begin{enumerate}[leftmargin=1.5em]
+  \item the power switch and gate driver, their key parameters, and a compatibility assessment
+        across the full battery-voltage range (Sections~\ref{sec:spec}--\ref{sec:compat});
+  \item the gate-drive passive network, derived quantitatively (Section~\ref{sec:passive});
+  \item the \emph{phase-current measurement} chain (in-line shunt $+$ amplifier $+$ ADC interface)
+        for all three phases (Section~\ref{sec:current});
+  \item the \emph{voltage measurement} chains for the DC bus and for each of the three phase
+        nodes (Section~\ref{sec:voltage}); and
+  \item an \emph{RC snubber} across the power switches (Section~\ref{sec:snubber}),
+\end{enumerate}
+followed by the grounding/noise strategy, thermal considerations, and the bill of materials. For
+each analog block the report explains the operating principle, derives the governing equations,
+computes numerical values for the present specification, and selects a specific, orderable
+component.
+
+Because the inverter accepts any \SI{24}{\volt} or \SI{48}{\volt} battery with no assumed
+chemistry, the design is dimensioned for the worst case of each electrical stress rather than for
+a single nominal operating point. The system uses a \emph{single shared ground}; noise immunity is
+obtained through layout discipline rather than through a separate analog ground plane
+(Section~\ref{sec:noise}).
+
+%=====================================================================
+\section{Design Specification}\label{sec:spec}
+
+Table~\ref{tab:spec} lists the given design parameters. The control method is field-oriented
+control with space-vector PWM throughout; six-step (trapezoidal) commutation is discussed only as
+historical background in Section~\ref{sec:why}. Rotor position is obtained from Hall-effect
+sensors.
+
+\begin{table}[!t]
+\centering
+\caption{Given design parameters.}
+\label{tab:spec}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{4.0cm} L@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} & \textbf{Rationale / source} \\
+\midrule
+Power source & Battery (\SI{24}{\volt} or \SI{48}{\volt} pack) & Bus voltage varies with state of charge \\
+DC-bus voltage range & \SI{24}{\volt} pack: \SIrange{19}{30}{\volt}\newline \SI{48}{\volt} pack: \SIrange{39}{60}{\volt} & $\Vbus^{\max}=\SI{60}{\volt}$ (full \SI{48}{\volt} pack); $\Vbus^{\min}=\SI{19}{\volt}$ (depleted \SI{24}{\volt} pack) \\
+Output power & $\approx\SI{2.5}{\kilo\watt}$ (\SI{24}{\volt} pack) / $\approx\SI{5}{\kilo\watt}$ (\SI{48}{\volt} pack) & Motor power scales with bus voltage \\
+Switching frequency $\fsw$ & \SI{40}{\kilo\hertz} & Above the audible band ($\sim\SI{20}{\kilo\hertz}$), so the PWM tone is inaudible \\
+Control & FOC with SVPWM & Sinusoidal, rotor-field-oriented current control~\cite{ti_foc,ti_svpwm} \\
+Position sensing & Hall-effect sensors & Six \ang{60} sectors per electrical revolution; FOC angle by interpolation \\
+Power switch & IPT015N10N5, $\times 2$ in parallel per position & \SI{100}{\volt}, \SI{1.5}{\milli\ohm} OptiMOS\textsuperscript{\texttrademark}\,5, optimized for high-current applications~\cite{ipt015ds,ipt015part} \\
+Gate driver & UCC27211A-Q1, $\times 1$ per leg & \SI{120}{\volt} boot, \SI{3.7}{\ampere}/\SI{4.5}{\ampere} half-bridge driver with integrated boot diode~\cite{ucc27211,ucc27211folder} \\
+Gate-drive supply $V_{DD}$ & \SI{12}{\volt} & Within the device operating range \SIrange{8}{17}{\volt}~\cite{ucc27211} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Worst-case phase current}\label{sec:iph}
+The current-handling hardware must be dimensioned for the largest phase current the inverter can
+carry, since this sets both the conduction loss in the MOSFETs and the shunt/amplifier scaling.
+For a sinusoidally modulated three-phase inverter using SVPWM, the maximum fundamental phase-voltage
+amplitude is $\hat V_{\mathrm{ph}}=\Vbus/\sqrt{3}$, so the maximum RMS phase voltage is
+\begin{equation}
+V_{\mathrm{ph,rms}}=\frac{\Vbus}{\sqrt{6}} .
+\label{eq:vph}
+\end{equation}
+With three phases and displacement power factor $\mathrm{PF}=\cos\varphi$, the AC power is
+$P = 3\,V_{\mathrm{ph,rms}}\,\Iph\,\mathrm{PF}$. Taking converter efficiency $\eta\!\to\!1$ (the
+conservative assumption that maximizes current) and solving for the RMS phase current,
+\begin{equation}
+\boxed{\;\Iph = \frac{\sqrt{6}}{3}\,\frac{P}{\Vbus\,\mathrm{PF}}
+        \approx 0.816\,\frac{P}{\Vbus\,\mathrm{PF}}\;}
+\label{eq:iph}
+\end{equation}
+which is largest at minimum bus voltage and minimum power factor. Table~\ref{tab:env} evaluates
+\eqref{eq:iph} at the four supply/power corners ($\mathrm{PF}=0.9$).
+
+\begin{table}[!t]
+\centering
+\caption{Operating corners and resulting phase current from \eqref{eq:iph} ($\mathrm{PF}=0.9$).}
+\label{tab:env}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l c c c c}
+\toprule
+Supply / motor & $\Vbus$ (V) & $P$ (kW) & $\Iph$ (A,rms) & $\hat I_{\mathrm{ph}}$ (A,pk)\\
+\midrule
+\SI{24}{\volt} pack, \SI{2.5}{\kilo\watt} & 19 (min) & 2.5 & \textbf{119.4} & \textbf{168.8}\\
+\SI{24}{\volt} pack, \SI{2.5}{\kilo\watt} & 30 (max) & 2.5 & 75.6 & 106.9\\
+\SI{48}{\volt} pack, \SI{5}{\kilo\watt}   & 39 (min) & 5.0 & 116.3 & 164.5\\
+\SI{48}{\volt} pack, \SI{5}{\kilo\watt}   & 60 (max) & 5.0 & 75.6 & 106.9\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The limiting corner is \SI{2.5}{\kilo\watt} at \SI{19}{\volt}: $\Iph^{\max}\approx\SI{119}{\ampere}$
+RMS, $\hat I_{\mathrm{ph}}^{\max}\approx\SI{169}{\ampere}$ peak. The corresponding worst-case DC-bus
+current is $P/\Vbus^{\min}=2500/19\approx\SI{132}{\ampere}$. Because two devices are paralleled in
+each switch position, each MOSFET carries approximately half of the phase current, i.e.\
+$\approx\SI{60}{\ampere}$ RMS, which is far below the $2\times\SI{250}{\ampere}$ ($T_C=\SI{100}{\celsius}$)
+continuous rating of the paralleled pair~\cite{ipt015ds}. The per-device conduction loss at this
+corner is $P=I^2\Rdson\approx 60^2\times\SI{1.5}{\milli\ohm}\approx\SI{5.4}{\watt}$ (rising toward
+$\sim\SI{8}{\watt}$ as $\Rdson$ increases with junction temperature), which requires adequate
+cooling (Section~\ref{sec:thermal}). All current-sense quantities below refer to this limiting
+corner.
+
+%=====================================================================
+\section{Background and Theory of Operation}\label{sec:why}
+
+\subsection{Why an inverter is required to drive a BLDC/PMSM machine}
+Despite its name, the brushless DC motor is a synchronous AC machine: it has a permanent-magnet
+rotor and a three-phase stator winding, and it lacks the mechanical commutator and brushes that a
+conventional DC motor uses to switch current between windings as the rotor turns~\cite{ti_foc}.
+The commutation function once performed mechanically by the brushes must therefore be performed
+electronically. The inverter is the circuit that does this: it converts the fixed-polarity DC bus
+voltage (here supplied by a battery) into the set of controlled, alternating phase currents needed
+to keep the stator magnetic field rotating ahead of the rotor and thereby produce continuous
+torque~\cite{ti_foc}.
+
+This design uses \emph{field-oriented control} (FOC) with \emph{space-vector PWM} (SVPWM). In FOC
+the measured three-phase currents are transformed (Clarke and Park transformations) into a
+rotor-aligned reference frame, where a direct-axis ($d$) and a quadrature-axis ($q$) current are
+regulated independently; the $q$-axis current produces torque while the $d$-axis current is
+normally held at zero~\cite{ti_foc}. The resulting voltage demand is synthesized by SVPWM, which
+selects and time-weights the inverter's switching states to approximate the commanded voltage
+vector with the best use of the available bus voltage~\cite{ti_svpwm}. Compared with the simpler
+six-step (trapezoidal, \ang{120}) scheme --- in which the six switches step through six discrete
+field orientations per electrical revolution --- FOC drives sinusoidal phase currents and produces
+smooth torque with low ripple, which is why it is adopted here. The rotor angle that the Park
+transformation and SVPWM require is obtained from the Hall-effect sensors, interpolated between the
+six \ang{60} sector transitions to recover a continuous electrical angle.
+
+\subsection{How the inverter circuit works}
+The power stage is a three-phase bridge: three identical half-bridge ``legs,'' one per motor phase,
+each consisting of a high-side switch and a low-side switch in series across the DC bus, with the
+motor phase connected to the midpoint. In this design each switch is two IPT015N10N5 MOSFETs in
+parallel, so one leg is four MOSFETs and the full bridge is twelve.
+
+Within a leg, the two switches operate complementarily --- never both on at once, which would
+short-circuit the DC bus (``shoot-through''). Turning on the high-side switch connects the phase to
+the positive bus; turning on the low-side switch connects it to ground; turning both off lets the
+phase float. Modulating the three legs with SVPWM circulates sinusoidal currents through the phases
+in the sequence that produces a rotating stator field~\cite{ti_svpwm}. The MOSFET body diodes
+(together with the motor inductance) provide the freewheeling path for the inductive phase current
+during the dead-time between switch states; the IPT015N10N5 body diode is characterized for this
+purpose ($V_{SD}\approx\SI{0.85}{\volt}$, $Q_{rr}\approx\SI{316}{\nano\coulomb}$)~\cite{ipt015ds}.
+The resistive on-state of the MOSFET ($\Rdson$ as low as \SI{1.5}{\milli\ohm}, again halved by
+paralleling) keeps the conduction loss low at currents on the order of \SI{100}{\ampere}~\cite{ipt015ds,balogh}.
+
+\subsection{Purpose of each component}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Power MOSFETs (IPT015N10N5 $\times2$ per position):} the controlled switches that
+        connect each phase to the buses. Two in parallel halve the effective on-resistance and
+        share the conduction loss and heat; the positive temperature coefficient of $\Rdson$ makes
+        the sharing self-stabilizing~\cite{balogh}.
+  \item \textbf{Gate driver (UCC27211A-Q1):} converts the controller's PWM logic into the
+        high-current \SI{12}{\volt} gate drive needed to switch the MOSFETs quickly, level-shifts
+        the high-side signal to the floating switch node, and enforces under-voltage lockout
+        (UVLO)~\cite{ucc27211}. A gate driver is required because a logic output (often
+        \SI{3.3}{\volt}, $\le\SI{1}{\ampere}$) can neither fully enhance a power MOSFET nor supply
+        the peak current for fast switching, and because the high-side gate must be referenced to a
+        node that swings to the bus voltage~\cite{ucc27211,balogh}.
+  \item \textbf{Bootstrap capacitor:} the floating energy reservoir that supplies the high-side
+        driver while the switch node is high (Section~\ref{sec:boottheory}).
+  \item \textbf{Bootstrap diode (internal):} a one-way valve that refills the bootstrap capacitor
+        from $V_{DD}$ when the switch node is low and blocks the bus voltage when it is
+        high~\cite{ucc27211,ir_an978}.
+  \item \textbf{Gate resistors:} set and limit the gate current, shape $\mathrm{d}v/\mathrm{d}t$
+        for EMI, and damp/balance the paralleled gates~\cite{balogh}.
+  \item \textbf{Gate--source pull-down resistors:} hold the MOSFETs off at power-up and add
+        $\mathrm{d}v/\mathrm{d}t$ immunity against false turn-on~\cite{balogh}.
+  \item \textbf{Decoupling capacitors:} supply the fast gate-current pulses locally so that the
+        \SI{12}{\volt} rail and the driver bias do not collapse during switching~\cite{ucc27211}.
+  \item \textbf{DC-link capacitance:} stiffens the bus against the large half-bridge ripple current
+        and limits the commutation overshoot within the \SI{100}{\volt} device rating.
+\end{itemize}
+
+%=====================================================================
+\section{Power Switch: Infineon IPT015N10N5}\label{sec:fet}
+
+The IPT015N10N5 is an N-channel OptiMOS\textsuperscript{\texttrademark}\,5 power transistor in a
+TO-Leadless (PG-HSOF-8, ``TOLL'') package, which Infineon describes as suited to high-frequency
+switching and intended for light-electric-vehicle, forklift, and power-tool drives~\cite{ipt015ds,ipt015part}.
+The parameters relevant to this design are summarized in Table~\ref{tab:fet}; all values are from
+the datasheet (Rev.~2.4) unless noted~\cite{ipt015ds}.
+
+\begin{table}[!t]
+\centering
+\caption{Key parameters of the IPT015N10N5~\cite{ipt015ds}.}
+\label{tab:fet}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l L L@{}}
+\toprule
+\textbf{Symbol} & \textbf{Parameter} & \textbf{Value / note} \\
+\midrule
+$V_{DS}$ & Drain--source voltage & \SI{100}{\volt} (absolute maximum) \\
+$\Rdson$ & On-resistance at $V_{GS}=\SI{10}{\volt}$ & \SI{1.3}{\milli\ohm} typ.\ / \SI{1.5}{\milli\ohm} max. \\
+$I_D$ & Continuous drain current & \SI{353}{\ampere} ($T_C=\SI{25}{\celsius}$); \SI{250}{\ampere} ($T_C=\SI{100}{\celsius}$) \\
+$V_{GS(\mathrm{th})}$ & Gate threshold voltage & \num{2.2} / \num{3.0} / \SI{3.8}{\volt} (min/typ/max) \\
+$V_{\mathrm{plateau}}$ & Miller-plateau voltage & \SI{4.4}{\volt} typ.\ (at $I_D=\SI{100}{\ampere}$) \\
+$C_{iss}$ & Input capacitance & \SI{12}{\nano\farad} typ.\ / \SI{16}{\nano\farad} max. \\
+$C_{oss}$ & Output capacitance & \SI{1.8}{\nano\farad} typ. \\
+$C_{rss}$ & Reverse-transfer capacitance & \SI{80}{\pico\farad} typ.\ / \SI{140}{\pico\farad} max. \\
+$R_{G,i}$ & Internal gate resistance & \SI{1.4}{\ohm} typ.\ / \SI{2.1}{\ohm} max. \\
+$Q_{g}$ & Total gate charge (0--\SI{10}{\volt}) & \SI{169}{\nano\coulomb} typ.\ / \SI{211}{\nano\coulomb} max. \\
+$Q_{gs}$ & Gate--source charge & \SI{53}{\nano\coulomb} \\
+$Q_{gd}$ & Gate--drain (Miller) charge & \SI{34}{\nano\coulomb} typ.\ / \SI{51}{\nano\coulomb} max. \\
+$g_{fs}$ & Transconductance & \SI{140}{\siemens} min.\ / \SI{280}{\siemens} typ. \\
+$V_{SD}$ & Body-diode forward voltage & \SI{0.85}{\volt} typ.\ / \SI{1.2}{\volt} max. \\
+$Q_{rr}$ & Body-diode reverse-recovery charge & $\approx\SI{316}{\nano\coulomb}$ typ. \\
+$V_{GS,\max}$ & Gate--source voltage limit & $\pm\SI{20}{\volt}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A property that directly justifies paralleling is the positive temperature coefficient of $\Rdson$
+(about $+0.7$ to $+\SI{1}{\percent\per\kelvin}$ in power MOSFETs): a device that carries more current
+heats up, its resistance rises, and current is pushed back toward the cooler device, so paralleled
+MOSFETs self-balance their currents~\cite{balogh}. This is the standard reason MOSFETs (unlike
+bipolar transistors) are well suited to parallel operation~\cite{balogh}.
+
+%=====================================================================
+\section{Gate Driver: Texas Instruments UCC27211A-Q1}\label{sec:gd}
+
+The UCC27211A-Q1 is an AEC-Q100-qualified \SI{120}{\volt} high-side/low-side half-bridge gate
+driver that drives two N-channel MOSFETs from independent inputs; its floating high-side stage can
+operate to \SI{120}{\volt}, and a \SI{120}{\volt} bootstrap diode is integrated on-chip, so no
+external boot diode is mandatory~\cite{ucc27211,ucc27211folder}. The relevant parameters, all from
+datasheet SLUSCG0C, are listed in Table~\ref{tab:gd}~\cite{ucc27211}.
+
+\begin{table}[!t]
+\centering
+\caption{Key parameters of the UCC27211A-Q1~\cite{ucc27211}.}
+\label{tab:gd}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l L L@{}}
+\toprule
+\textbf{Symbol} & \textbf{Parameter} & \textbf{Value} \\
+\midrule
+$V_{DD}$ & Supply (operating / abs.\ max) & \SIrange{8}{17}{\volt} / \SI{20}{\volt} \\
+$I_{O,\mathrm{source}}$ / $I_{O,\mathrm{sink}}$ & Peak output current & \SI{3.7}{\ampere} / \SI{4.5}{\ampere} \\
+$V_{DD,\mathrm{UVLO}}$ & UVLO threshold on $V_{DD}$ (rising) & \SI{7.0}{\volt} (hysteresis \SI{0.5}{\volt}) \\
+$V_{HB,\mathrm{UVLO}}$ & UVLO threshold on high side (HB--HS, rising) & \SI{6.7}{\volt} (hysteresis \SI{1.1}{\volt}) \\
+$V_{HB}$ & Max boot-supply voltage & \SI{120}{\volt} (HB--HS $\le\SI{20}{\volt}$) \\
+$V_{HS}$ & Switch-node range & $-(24-V_{DD})\,$V (i.e.\ $-\SI{12}{\volt}$ at $V_{DD}=\SI{12}{\volt}$) to \SI{105}{\volt} recommended \\
+$V_{F}$ & Boot-diode forward drop & \SI{0.85}{\volt} (@\SI{100}{\micro\ampere}) / \SI{1.05}{\volt} (@\SI{100}{\milli\ampere}) max. \\
+$R_{D}$ & Boot-diode dynamic resistance & \SI{0.55}{\ohm} typ. \\
+$t_{PD}$ & Propagation delay & \SI{20}{\nano\second} typ. \\
+$t_{R}/t_{F}$ & Rise / fall time (\SI{1}{\nano\farad}) & \SI{7.2}{\nano\second} / \SI{5.5}{\nano\second} \\
+$I_{HB}$ & Boot quiescent current & \SI{0.12}{\milli\ampere} max. \\
+$SR_{HS}$ & Max high-side slew rate & \SI{50}{\volt\per\nano\second} \\
+$C_{HB}$ & Recommended boot capacitor & \SIrange{0.022}{0.1}{\micro\farad} (gate-charge dependent) \\
+$C_{VDD}$ & Recommended $V_{DD}$ decoupling & \SIrange{0.22}{4.7}{\micro\farad} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+TI divides the device into five functional blocks --- input stages, UVLO protection, level shift,
+boot diode, and output stages~\cite{ucc27211}. The inputs are independent HI/LI with
+$\approx\SI{68}{\kilo\ohm}$ pull-downs and TTL-compatible thresholds with wide hysteresis for noise
+immunity; they tolerate $-\SI{10}{\volt}$ to $+\SI{20}{\volt}$ and are independent of $V_{DD}$, so
+they accept both microcontroller logic and analog-controller signals~\cite{ucc27211}. Separate
+monitors on $V_{DD}$ and on the floating $V_{HB}$--$V_{HS}$ supply hold the outputs low until the
+bias is valid. The level shifter translates the ground-referenced high-side command up to the
+floating high-side stage with tight ($\approx\SI{4}{\nano\second}$) channel-to-channel delay
+matching. Both output stages provide \SI{3.7}{\ampere} source / \SI{4.5}{\ampere} sink with fast,
+low-impedance edges and a \SI{20}{\nano\second} propagation delay~\cite{ucc27211}.
+
+The largest output current is required \emph{around the Miller-plateau voltage} ($\sim\SI{5}{\volt}$),
+because it is there that the gate driver must push the Miller charge $Q_{gd}$ through the plateau in
+the intended transition time; the datasheet states the peak-current requirement as
+$I_{\mathrm{PEAK}}=Q_{GD}/\mathrm{d}t$, and the \SI{3.7}{\ampere} capability is checked against this
+in Section~\ref{sec:gateR}~\cite{ucc27211,balogh}.
+
+%=====================================================================
+\section{Compatibility Assessment}\label{sec:compat}
+
+Table~\ref{tab:compat} checks the device pair against the full battery-voltage range.
+
+\begin{table}[!t]
+\centering
+\caption{Component compatibility check.}
+\label{tab:compat}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}L L L >{\raggedright\arraybackslash}p{2.3cm}@{}}
+\toprule
+\textbf{Check} & \textbf{Requirement} & \textbf{This design} & \textbf{Outcome} \\
+\midrule
+Blocking voltage & $V_{DS}\gg\Vbus^{\max}$ incl.\ ringing & \SI{100}{\volt} vs \SI{60}{\volt}; $\approx1.67\times$ DC margin & \textbf{Pass} --- $\approx\SI{40}{\volt}$ headroom for turn-off overshoot~\cite{ipt015ds} \\
+High-side supply voltage & $V_{HB}>\Vbus^{\max}$ & \SI{120}{\volt} boot, \SI{105}{\volt} HS rec., vs \SI{60}{\volt} & \textbf{Pass}~\cite{ucc27211} \\
+Gate-drive level & $V_{GS,\max}>V_{DD}\ge$ full enhancement & $\pm\SI{20}{\volt}$ limit, driven at \SI{12}{\volt} & \textbf{Pass}~\cite{ipt015ds,ucc27211} \\
+UVLO & $V_{DD}>$ UVLO & \SI{12}{\volt} vs \SI{7}{\volt} ($V_{DD}$), \SI{6.7}{\volt} (HB) & \textbf{Pass}~\cite{ucc27211} \\
+Negative node ringing & HS tolerates undershoot & $-\SI{12}{\volt}$ transient capability at $V_{DD}=\SI{12}{\volt}$ & \textbf{Pass}~\cite{ucc27211} \\
+Current capability & $I_D\gg$ leg current & $2\times\SI{250}{\ampere}$ (\SI{100}{\celsius}) vs $\approx\SI{60}{\ampere}$/device worst case & \textbf{Pass}~\cite{ipt015ds} \\
+Drive strength vs charge & Sufficient current through the Miller plateau for the \emph{paralleled} charge & see Section~\ref{sec:gateR} & \textbf{Pass} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The pair is electrically sound across the full battery range. At the highest bus voltage
+(\SI{60}{\volt}, full \SI{48}{\volt} pack) the \SI{100}{\volt} class gives a $\approx1.67\times$ DC
+margin and about \SI{40}{\volt} of reserve for the $L\,\mathrm{d}i/\mathrm{d}t$ turn-off overshoot
+of $V_{DS}$; this makes control of the turn-off speed (via the asymmetric gate network of
+Section~\ref{sec:asym}) more important than it would be on a fixed \SI{48}{\volt} bus. The only
+point that genuinely required quantitative verification --- because the design parallels two
+high-$Q_g$ MOSFETs per switch --- is whether one channel of the UCC27211A-Q1 can charge and
+discharge the \emph{doubled} gate charge fast enough; this is treated in Section~\ref{sec:gateR}
+and in the bootstrap sizing of Section~\ref{sec:cboot}, and is the reason the standard
+\SI{0.1}{\micro\farad} bootstrap capacitor must be revisited for this load.
+
+%=====================================================================
+\section{Gate-Drive Passive Network Design}\label{sec:passive}
+
+Throughout, the gate charge of one \emph{switch position} is twice that of a single device, because
+two MOSFETs are paralleled:
+\begin{equation}
+Q_{g,\mathrm{pos}} = 2\,Q_{g} = 2\times\SI{211}{\nano\coulomb} = \SI{422}{\nano\coulomb}\ \text{(worst case, to \SI{10}{\volt})}~\cite{ipt015ds}.
+\end{equation}
+Because the gate is driven to \SI{12}{\volt} rather than the \SI{10}{\volt} at which $Q_g$ is
+specified, and because the charge curve is nearly flat above $\sim\SI{7}{\volt}$, a $\approx\SI{10}{\percent}$
+margin is added, giving a design value of $Q_{g,\mathrm{pos}}\approx\SI{465}{\nano\coulomb}$ per
+switch position.
+
+\subsection{Bootstrap operation and the Miller plateau}\label{sec:boottheory}
+\paragraph{Why an N-channel-only half-bridge needs a bootstrap supply}
+N-channel MOSFETs are preferred for the half-bridge because, for a given die area and voltage, they
+have far lower $\Rdson$ than P-channel devices. But an N-channel MOSFET turns on only when its gate
+is several volts above its source. For the low-side device the source is at ground, so a
+ground-referenced \SI{12}{\volt} drive works directly. For the high-side device the source is the
+switch node, which rises to the full bus voltage when that device is on; to keep it on, the gate
+must be driven $\approx\SI{12}{\volt}$ \emph{above the bus} --- a voltage that exists nowhere in a
+single-supply system~\cite{ucc27211,balogh}. The bootstrap circuit creates this floating high-side
+supply cheaply, using only a diode and a capacitor~\cite{ir_an978}.
+
+\paragraph{How it works}
+When the low-side switch is on, the switch node (and the HS pin) is pulled to ground; the bootstrap
+capacitor, connected between HB and HS, charges from the \SI{12}{\volt} $V_{DD}$ rail through the
+bootstrap diode to $\approx V_{DD}-V_F\approx\SI{11}{\volt}$~\cite{ucc27211,ir_an978}. When the
+high-side then turns on, the switch node rises to the bus voltage; the bootstrap diode reverse-biases
+(blocking the bus), and the charged capacitor ``rides up'' on the switch node, holding HB
+$\approx\SI{11}{\volt}$ above HS and thus supplying the floating bias that keeps the high-side MOSFET
+fully enhanced~\cite{ucc27211,ir_an978}. The capacitor is refilled each cycle when the low-side next
+turns on --- which is why a minimum low-side on-time (refresh) is required, and why
+Section~\ref{sec:cboot} verifies both the droop and the recharge~\cite{ir_an978,ir_an1123}.
+
+\paragraph{The Miller plateau}
+During each turn-on the gate voltage rises, pauses on a flat ``Miller plateau''
+($\approx\SI{4.4}{\volt}$ here~\cite{ipt015ds}), then rises again. The pause occurs because, once
+the channel carries the full load current, all the gate-drive current is diverted into discharging
+the gate--drain capacitance $C_{GD}$ so that the drain voltage can swing --- during this interval
+$V_{GS}$ is clamped and only the drain voltage moves~\cite{balogh}. The plateau interval is exactly
+the window in which the device simultaneously sustains high voltage and high current, so it is where
+the switching loss is generated~\cite{balogh}. The Miller charge $Q_{gd}$ that must be pushed through
+the plateau is doubled by paralleling ($\approx\SI{102}{\nano\coulomb}$ worst case), and the
+\emph{speed} of the voltage transition is set by how much current the driver can force into the gate
+at the plateau level --- not by its peak current at full $V_{DD}$~\cite{balogh}. This is why
+Balogh emphasizes that the most important attribute of a gate driver is its source/sink capability
+\emph{around the plateau}~\cite{balogh}.
+
+\subsection{Bootstrap capacitor}\label{sec:cboot}
+The bootstrap capacitor $C_{BOOT}$ must supply the entire charge needed to turn on the high-side
+device and to feed the high-side quiescent current during the high-side on-time, while drooping by
+no more than the allowed $\Delta V_{BS}$~\cite{ir_an978,ir_an1123}. The governing relations are
+\begin{align}
+\Delta V_{BS} &\le V_{DD} - V_{F} - V_{GS,\min} - V_{DS,\mathrm{on}}, \label{eq:dvbs}\\
+Q_{\mathrm{TOTAL}} &= Q_{g,\mathrm{pos}} + \frac{I_{QBS}+I_{LK}}{\fsw} + Q_{LS},
+   \qquad C_{BOOT} \ge \frac{Q_{\mathrm{TOTAL}}}{\Delta V_{BS}}, \label{eq:cboot}
+\end{align}
+with an additional $\sim\SI{20}{\percent}$ margin recommended for tolerances and for capacitance
+loss when the diode is integrated~\cite{ir_an1123}.
+
+\paragraph{Numbers} The boot-diode drop at the relevant charging current is
+$V_F\approx\SI{0.9}{\volt}$~\cite{ucc27211}; requiring the high-side gate to stay fully enhanced,
+$V_{GS,\min}\approx\SI{10}{\volt}$, with low-side $V_{DS,\mathrm{on}}\approx\SI{0.1}{\volt}$, the
+\emph{allowed} droop from \eqref{eq:dvbs} is $\Delta V_{BS}\le 12-0.9-10-0.1=\SI{1.0}{\volt}$. A
+conservative design target of $\Delta V_{BS}=\SI{0.5}{\volt}$ is chosen, which keeps the floating
+supply at $\approx\SI{10.6}{\volt}$, well above the \SI{6.7}{\volt} high-side UVLO~\cite{ucc27211}.
+The quiescent/leakage charge over the worst-case high-side on-time is negligible: with
+$I_{QBS}=\SI{0.12}{\milli\ampere}$~\cite{ucc27211}, a high duty $D_{\max}\approx0.95$, and
+$t_{HS}=0.95/\SI{40}{\kilo\hertz}=\SI{23.75}{\micro\second}$,
+\begin{equation}
+Q_{\mathrm{leak}} \approx (\SI{0.12}{\milli\ampere})(\SI{23.75}{\micro\second}) \approx \SI{2.9}{\nano\coulomb} \ll Q_{g,\mathrm{pos}} .
+\end{equation}
+The gate charge dominates, so $Q_{\mathrm{TOTAL}}\approx\SI{465}{\nano\coulomb}+\SI{3}{\nano\coulomb}\approx\SI{468}{\nano\coulomb}$ and
+\begin{equation}
+C_{BOOT} \ge \frac{\SI{468}{\nano\coulomb}}{\SI{0.5}{\volt}} \approx \SI{0.94}{\micro\farad}.
+\end{equation}
+Applying the recommended margin and allowing for DC-bias capacitance loss in Class-II ceramics, the
+selected value is $\boxed{C_{BOOT}=\SI{2.2}{\micro\farad},\ \text{X7R},\ \ge\SI{25}{\volt}}$, placed
+directly between the HB and HS pins~\cite{ucc27211,ir_an1123}.
+
+\paragraph{Why the datasheet's \SIrange{0.022}{0.1}{\micro\farad} range does not apply here}
+That range is correct for a \emph{single} MOSFET with $\sim$30--\SI{90}{\nano\coulomb} of gate
+charge~\cite{ucc27211}; the paralleled pair here requires about $5\times$ more charge, which is
+exactly why the datasheet states the value ``is dependant on the gate charge of the high-side
+MOSFET''~\cite{ucc27211}. Using \SI{0.1}{\micro\farad} would give a droop of
+$\SI{468}{\nano\coulomb}/\SI{0.1}{\micro\farad}\approx\SI{4.7}{\volt}$ per cycle --- enough to
+under-drive the device or even trip the high-side UVLO. The larger \SI{2.2}{\micro\farad} value is
+therefore not optional for this load.
+
+\paragraph{Recharge check} The capacitor replaces only the $\approx\SI{468}{\nano\coulomb}$ removed
+each cycle. At the worst duty the low-side on-time is $\approx\SI{1.25}{\micro\second}$; the required
+average charging current is $\SI{468}{\nano\coulomb}/\SI{1.25}{\micro\second}\approx\SI{0.37}{\ampere}$,
+while the integrated \SI{0.55}{\ohm} boot diode can initially supply
+$(12-0.9)/0.55\approx\SI{20}{\ampere}$~\cite{ucc27211}. Recharge is therefore comfortable at
+\SI{40}{\kilo\hertz}. At very low motor speed with high-side duty near \SI{100}{\percent}, the
+refresh window shrinks and a periodic low-side refresh pulse may be required --- a known limitation
+of all bootstrap supplies~\cite{ir_an978,ir_an1123}.
+
+\subsection{Bootstrap diode}
+The UCC27211A-Q1 \emph{integrates} the bootstrap diode (anode to $V_{DD}$, cathode to HB); it is
+rated \SI{120}{\volt}, has a typical dynamic resistance of \SI{0.55}{\ohm}, a forward drop of
+$\approx$0.9--\SI{1.05}{\volt} at \SI{100}{\milli\ampere}, and a \SI{20}{\nano\second} turn-off
+time~\cite{ucc27211}. For this design the internal diode is adequate: Section~\ref{sec:cboot} shows
+that both the charging current and the droop are comfortably within its capability, and its
+\SI{120}{\volt} rating exceeds the \SI{60}{\volt} bus by a wide margin~\cite{ucc27211}. An optional
+external diode in parallel may be added to further reduce the forward drop and per-cycle droop; if
+used, it must block $\ge\Vbus+V_{DD}$ (a \SI{100}{\volt} part is chosen to match the MOSFET class),
+recover quickly ($t_{rr}\le\SI{50}{\nano\second}$) or be a Schottky, and carry the peak charge
+current ($\ge\SI{1}{\ampere}$)~\cite{ir_an978,ir_an1123}. Because the function is already on-chip,
+this component is an upgrade, not a necessity.
+
+\subsection{Gate resistors and peak-current / Miller check}\label{sec:gateR}
+\paragraph{Damping requirement}
+The external gate resistor for critically damping the gate-loop resonance formed by the source
+inductance $L_S$ and $C_{iss}$ is~\cite{balogh}
+\begin{equation}
+R_{\mathrm{GATE,OPT}} = 2\sqrt{\frac{L_S}{C_{iss}}} - (R_{DRV}+R_{G,i}).
+\end{equation}
+For the low-inductance TOLL package ($L_S$ on the order of \SI{1}{\nano\henry}) and
+$C_{iss}=\SI{12}{\nano\farad}$, $2\sqrt{L_S/C_{iss}}\approx\SI{0.58}{\ohm}$, which is already
+exceeded by the driver output impedance plus the internal gate resistance ($R_{DRV}+R_{G,i}$). The
+result is negative, meaning the loop is \emph{already over-damped by the driver impedance and the
+internal \SI{1.4}{\ohm} gate resistance alone}~\cite{balogh,ipt015ds}. The external gate resistor is
+therefore chosen not for damping but to (i) keep the shared driver output current within rating,
+(ii) shape $\mathrm{d}v/\mathrm{d}t$ for EMI, and (iii) balance the two paralleled devices.
+
+\paragraph{Individual resistors}
+Best practice for paralleled MOSFETs is an \emph{individual} gate resistor at each gate (two per
+switch position) rather than a single shared resistor, so that any tendency of the two devices to
+oscillate against one another is damped and their switching is balanced. As a symmetric baseline,
+$R_{G,\mathrm{ext}}=\SI{2.2}{\ohm}$ (E24) per MOSFET is close to the \SI{1.8}{\ohm} at which the
+IPT015N10N5 switching times are characterized~\cite{ipt015ds}; Section~\ref{sec:asym} refines this
+into the asymmetric network that is actually adopted.
+
+\paragraph{Peak-current / $\mathrm{d}v/\mathrm{d}t$ check}
+With the gate held at the plateau $V_{\mathrm{plateau}}=\SI{4.4}{\volt}$~\cite{ipt015ds}, the network
+would \emph{demand}, per device,
+\begin{equation}
+I_{G} = \frac{V_{DD}-V_{\mathrm{plateau}}}{R_{G,\mathrm{ext}}+R_{G,i}}
+      = \frac{12-4.4}{2.2+1.4} \approx \SI{2.1}{\ampere},
+\end{equation}
+i.e.\ $\approx\SI{4.2}{\ampere}$ for the pair, which exceeds the \SI{3.7}{\ampere} source limit;
+the driver therefore limits the current to \SI{3.7}{\ampere} and itself sets the transition speed.
+The time to deliver the combined Miller charge ($2\times\SI{51}{\nano\coulomb}=\SI{102}{\nano\coulomb}$
+max) at \SI{3.7}{\ampere} is
+\begin{equation}
+t_{\mathrm{Miller}} = \frac{Q_{gd,\mathrm{pos}}}{I_{O,\mathrm{source}}}
+   = \frac{\SI{102}{\nano\coulomb}}{\SI{3.7}{\ampere}} \approx \SI{28}{\nano\second},
+\end{equation}
+which, at the worst-case \SI{60}{\volt} bus, gives
+\begin{equation}
+\frac{\mathrm{d}V_{DS}}{\mathrm{d}t} \approx \frac{\SI{60}{\volt}}{\SI{28}{\nano\second}}
+   \approx \SI{2.1}{\volt\per\nano\second},
+\end{equation}
+which is moderate (good for conducted EMI) and far below the \SI{50}{\volt\per\nano\second} HS
+slew-rate limit~\cite{ucc27211}. This confirms the key compatibility question: \emph{even with the
+doubled gate charge of paralleling, one channel of the UCC27211A-Q1 switches the pair in under
+\SI{30}{\nano\second}} --- precisely the use case for the device's \SI{3.7}{\ampere}/\SI{4.5}{\ampere}
+rating~\cite{ucc27211}.
+
+\subsection{Asymmetric (split) gate-resistor network}\label{sec:asym}
+A single resistor forces one value to serve both switching edges, which is a compromise. This is
+replaced by an \emph{asymmetric} network that sets the turn-on and turn-off speeds independently ---
+slower, softer turn-on and fast, low-impedance turn-off --- which is the configuration adopted in
+the final design.
+
+\paragraph{Topology}
+Per MOSFET, an always-present series resistor $R_{on}$ carries the turn-on (source) current, and a
+branch of $R_{off}$ in series with an OFF Schottky diode $D_{off}$ is placed in parallel with it.
+$D_{off}$ is oriented anode-to-gate, cathode-to-driver-output, so it conducts \emph{only when the
+gate is pulled down} (turn-off / $\mathrm{d}v/\mathrm{d}t$ clamp). Hence
+\begin{equation}
+R_{g(\mathrm{on})} = R_{on}, \qquad R_{g(\mathrm{off})} = R_{on}\parallel(R_{off}+R_{D}),
+\end{equation}
+so at turn-on the gate sees only $R_{on}$, and at turn-off it sees the lower parallel
+combination~\cite{balogh,pmeg4030er}.
+
+\paragraph{Design direction --- slow on, fast off}
+For a hard-switched half-bridge the preferred asymmetry is slower turn-on, faster
+turn-off~\cite{pmeg4030er,an90059,toshiba_dvdt}. Faster turn-on raises the $\mathrm{d}i/\mathrm{d}t$
+of the drain current, which increases the reverse-recovery current of the complementary device's
+freewheeling body diode; the IPT015N10N5 body diode stores $Q_{rr}\approx\SI{316}{\nano\coulomb}$,
+so deliberately softened turn-on limits that recovery peak, its associated loss, and the EMI it
+generates~\cite{ipt015ds,pmeg4030er,an90059}. Turn-off, conversely, benefits from being fast and
+low-impedance: it reduces turn-off loss and, crucially, holds the gate of the \emph{off} device
+firmly at ground so that the Miller current injected through $C_{GD}$ when the complementary switch
+slews the node cannot raise $V_{GS}$ to the threshold and cause self (false)
+turn-on~\cite{an90059,toshiba_dvdt}. The \SI{100}{\volt} device on a bus up to \SI{60}{\volt} has
+enough voltage reserve ($\approx\SI{40}{\volt}$) to absorb the slightly higher turn-off overshoot
+that fast turn-off produces; because that reserve is smaller than on a fixed \SI{48}{\volt} bus, the
+ability to control the turn-off edge independently is all the more valuable. The asymmetry also
+reinforces the driver's own \SI{4.5}{\ampere}-sink / \SI{3.7}{\ampere}-source
+imbalance~\cite{ucc27211}.
+
+\paragraph{Value selection}
+\begin{itemize}[leftmargin=1.4em]
+  \item $R_{on}=\SI{3.3}{\ohm}$ (per MOSFET). Raised above the \SI{2.2}{\ohm} baseline to soften the
+        turn-on edge. The resulting per-device plateau current is
+        $(12-4.4)/(R_{on}+R_{G,i})=7.6/(3.3+1.4)=\SI{1.62}{\ampere}$ ($\approx\SI{3.2}{\ampere}$ for
+        the pair) --- now set by the resistor rather than the \SI{3.7}{\ampere} driver limit --- giving
+        a controlled $\mathrm{d}v/\mathrm{d}t$ of $60/(102\,\mathrm{n}/3.2)\approx\SI{1.9}{\volt\per\nano\second}$
+        worst case~\cite{ipt015ds,ucc27211}.
+  \item $R_{off}=\SI{1.0}{\ohm}$ (per MOSFET). With the OFF-diode dynamic resistance
+        $R_{D}\approx$0.1--\SI{0.15}{\ohm} (from the PMEG4030ER conduction characteristic,
+        $V_F\approx$0.46--\SI{0.54}{\volt})~\cite{pmeg4030er},
+        $R_{g(\mathrm{off})}=R_{on}\parallel(R_{off}+R_D)=3.3\parallel1.15\approx\SI{0.85}{\ohm}$, an
+        effective on:off resistance ratio of about $3.9\!:\!1$.
+\end{itemize}
+The internal gate resistance $R_{G,i}=\SI{1.4}{\ohm}$ is in series with the die and cannot be
+bypassed~\cite{ipt015ds}, so the total turn-off gate-loop resistance is
+$R_{G,i}+R_{g(\mathrm{off})}=\SI{2.25}{\ohm}$; reducing $R_{off}$ below $\sim\SI{1}{\ohm}$ yields
+diminishing returns, so \SI{1.0}{\ohm} is well placed. At this value the per-device turn-off plateau
+current is $4.4/2.25\approx\SI{1.96}{\ampere}$ ($\approx\SI{3.9}{\ampere}$ for the pair, near the
+\SI{4.5}{\ampere} sink limit), giving a turn-off transition of $\approx\SI{26}{\nano\second}$ versus
+$\approx\SI{32}{\nano\second}$ at turn-on --- the desired asymmetry~\cite{ucc27211}.
+
+\paragraph{OFF diode selection}
+$D_{off}$ must block the reverse voltage that appears across $R_{on}$ at turn-on
+($\approx I_{on,\mathrm{pk}}R_{on}\approx 1.62\times3.3\approx\SI{5.3}{\volt}$ plus ringing), carry
+the turn-off current pulse ($\approx\SI{2}{\ampere}$ peak per gate), recover instantly, and have low
+dynamic resistance. A Schottky satisfies all four. The selected component is the \textbf{Nexperia
+PMEG4030ER} --- \SI{40}{\volt}, \SI{3}{\ampere} Schottky rectifier with low $V_F$ ($\approx$0.46--\SI{0.54}{\volt}),
+$I_{FSM}=\SI{50}{\ampere}$, SOD-123W~\cite{pmeg4030er}. Its \SI{40}{\volt} rating gives $>7\times$
+margin over the $\sim\SI{5}{\volt}$ reverse stress, and its low $V_F$ and small junction capacitance
+keep the turn-off path clean~\cite{pmeg4030er}.
+
+\paragraph{Resistor power and package}
+The average power in a gate resistor is a fraction of the total gate-drive loss
+$P_G=Q_g V_{DD}\fsw$~\cite{balogh}. Per device, with $Q_g\approx\SI{232}{\nano\coulomb}$ at
+\SI{12}{\volt}, $P_G\approx\SI{0.11}{\watt}$, split between turn-on and turn-off; the external
+resistor sees only its fraction of the gate-loop resistance, so $P_{R_{on}}\approx\SI{26}{\milli\watt}$
+and $P_{R_{off}}\approx\SI{6}{\milli\watt}$ --- both far below 1/16\,W. The resistor does see
+short current pulses ($\sim$1.6--\SI{2}{\ampere}), but the per-transition energy in $R_{on}$ is
+$\approx\SI{0.6}{\micro\joule}$, negligible against any chip resistor's pulse rating. A
+\textbf{0805 thick-film, 1/8\,W} package is chosen for both $R_{on}$ and $R_{off}$
+($>4\times$ average-power margin and good pulse robustness)~\cite{balogh}.
+
+\subsection{Gate--source pull-down resistors}\label{sec:pulldown}
+A gate-to-source resistor holds each MOSFET definitely off before the driver outputs become active
+at power-up, and adds $\mathrm{d}v/\mathrm{d}t$ protection against Miller-induced
+turn-on~\cite{balogh}. In normal operation the driver's low output impedance and \SI{4.5}{\ampere}
+sink dominate this protection; the pull-down's main job is the power-up state. A standard
+$\boxed{R_{GS}=\SI{10}{\kilo\ohm}}$ per MOSFET is large enough not to load the driver and small
+enough to hold the gate down at power-up. A capacitive-divider estimate confirms the margin: when
+the complementary switch imposes the worst-case \SI{60}{\volt} on the off device, the worst-case
+gate rise through the divider $C_{rss}/C_{iss}=\SI{80}{\pico\farad}/\SI{12}{\nano\farad}\approx0.0067$
+would be only $\approx\SI{0.40}{\volt}$ even with a \emph{floating} gate --- still far below the
+\SI{2.2}{\volt} threshold --- and the active \SI{4.5}{\ampere} sink holds the real value lower
+still~\cite{ipt015ds,ucc27211}. A \textbf{0603, 1/10\,W} package suffices (the resistor
+dissipates $12^2/\SI{10}{\kilo\ohm}=\SI{14.4}{\milli\watt}$ when the gate is high).
+
+\subsection{Decoupling capacitors}
+\paragraph{$V_{DD}$ (low-side) decoupling}
+Whenever the LO output sources gate current, an equal pulse is drawn from $V_{DD}$, so a low-ESR
+ceramic must sit directly between $V_{DD}$ and $V_{SS}$~\cite{ucc27211}. Sized for a tolerable ripple
+$\Delta V$ with the same charge argument as the bootstrap,
+$C_{VDD}\ge Q_{g,\mathrm{pos}}/\Delta V=\SI{465}{\nano\coulomb}/\SI{0.5}{\volt}\approx\SI{0.93}{\micro\farad}$.
+TI recommends \SIrange{0.22}{4.7}{\micro\farad}~\cite{ucc27211}; the chosen value is
+$\boxed{C_{VDD}=\SI{4.7}{\micro\farad}\ \text{X7R}+\SI{0.1}{\micro\farad}}$ per driver, one set for
+each of the three drivers.
+
+\paragraph{HB (high-side) decoupling}
+This role is performed by the bootstrap capacitor itself (Section~\ref{sec:cboot}), placed directly
+between HB and HS; the separate \SIrange{0.022}{0.1}{\micro\farad} recommendation is only the minimum
+HF decoupling and is exceeded here by the computed \SI{2.2}{\micro\farad}~\cite{ucc27211}.
+
+\paragraph{\SI{12}{\volt} bulk}
+A shared bulk reservoir (e.g.\ \SIrange{22}{47}{\micro\farad}) on the auxiliary \SI{12}{\volt} rail
+feeds the three drivers and absorbs the aggregate gate-drive pulses~\cite{ucc27211}.
+
+\paragraph{DC-link decoupling}
+Because the source is a battery connected through a cable harness, the source impedance (internal
+battery resistance plus harness inductance) is significant, so local DC-link decoupling is even more
+important than on a stiff laboratory bus. The power stage carries a ripple current on the order of
+\SI{100}{\ampere} (up to $\approx\SI{132}{\ampere}$ worst case at the depleted \SI{24}{\volt} pack)
+and must be decoupled by a low-ESR/ESL bank (film and/or ceramic) close to the half-bridge, sized
+for the RMS ripple current and to keep the commutation overshoot within the \SI{100}{\volt} rating.
+Since the highest battery voltage is \SI{60}{\volt}, the bus capacitors should be rated
+$\ge\SI{80}{\volt}$ (film) or $\ge\SI{100}{\volt}$ (ceramic, allowing for DC-bias derating). Precise
+sizing depends on the harness inductance and is a board-level task.
+
+\begin{table}[!t]
+\centering
+\caption{Gate-drive passive bill of materials (per leg / per board).}
+\label{tab:gdbom}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l L L c c@{}}
+\toprule
+\textbf{Ref.} & \textbf{Function} & \textbf{Value} & \textbf{Per leg} & \textbf{3 legs} \\
+\midrule
+$C_{BOOT}$ & Bootstrap capacitor (HB--HS) & \SI{2.2}{\micro\farad} X7R $\ge\SI{25}{\volt}$ & 1 & 3 \\
+$C_{VDD}$ & $V_{DD}$ decoupling & \SI{4.7}{\micro\farad} X7R $+$ \SI{0.1}{\micro\farad} & 1 set & 3 sets \\
+$R_{on}$ & Turn-on resistor (per MOSFET) & \SI{3.3}{\ohm}, 0805, 1/8\,W & 4 & 12 \\
+$R_{off}$ & Turn-off resistor (per MOSFET) & \SI{1.0}{\ohm}, 0805, 1/8\,W & 4 & 12 \\
+$D_{off}$ & OFF Schottky diode & Nexperia PMEG4030ER (\SI{40}{\volt}, \SI{3}{\ampere}) & 4 & 12 \\
+$R_{GS}$ & Gate--source pull-down & \SI{10}{\kilo\ohm}, 0603, 1/10\,W & 4 & 12 \\
+$D_{BOOT}$ (opt.) & External parallel boot diode & \SI{100}{\volt} fast/Schottky $\ge\SI{1}{\ampere}$ & 0--1 & 0--3 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent Plus the active devices: \textbf{$12\times$ IPT015N10N5} (four per leg) and
+\textbf{$3\times$ UCC27211A-Q1}.
+
+%=====================================================================
+\section{Phase-Current Sensing}\label{sec:current}
+
+\subsection{Survey and comparison of current-sense topologies}\label{sec:csurvey}
+Four families of inverter current sensing exist; their measurement node is shown in
+Fig.~\ref{fig:topo} for one half-bridge, and they are compared in Table~\ref{tab:topo}.
+
+\begin{figure}[!t]
+\centering
+\begin{circuitikz}[scale=0.92,transform shape,american]
+\draw (0,4) node[anchor=east]{$\Vbus$} -- (6.5,4);
+\draw (0,-1.2) node[anchor=east]{GND} -- (6.5,-1.2);
+\draw (2,3.0) rectangle (3,3.8) node[midway]{$Q_H$};
+\draw (2.5,4) -- (2.5,3.8);
+\draw (2.5,3.0) -- (2.5,1.7);
+\draw (2,0.9) rectangle (3,1.7) node[midway]{$Q_L$};
+\draw (2.5,1.7) node[circ]{} -- (4.6,1.7) node[anchor=west]{phase $\to$ motor};
+\draw (3.6,1.7) node[anchor=south]{\scriptsize in-line $\Rshunt$};
+\draw[fill=yellow!30] (3.25,1.55) rectangle (3.95,1.85);
+\draw (2.5,0.9) -- (2.5,0.2);
+\draw[fill=yellow!30] (2.15,-0.1) rectangle (2.85,0.2) node[midway]{};
+\draw (2.5,0.0) node[anchor=west]{\scriptsize low-side $\Rshunt$};
+\draw (2.5,-0.1) -- (2.5,-1.2);
+\draw[fill=yellow!30] (2.15,4.0) rectangle (2.85,4.3);
+\draw (2.5,4.45) node[anchor=south]{\scriptsize high-side $\Rshunt$ (bus)};
+\draw (2.5,4.3) -- (2.5,5.0) -- (5.5,5.0) -- (5.5,4);
+\draw[fill=orange!25] (5.15,-1.55) rectangle (5.85,-1.25);
+\draw (5.5,-1.7) node[anchor=north]{\scriptsize single DC-link $\Rshunt$};
+\draw (5.5,-1.2)--(5.5,-1.25); \draw(5.5,-1.55)--(5.5,-2.0)--(0,-2.0);
+\end{circuitikz}
+\caption{Possible shunt positions in one inverter leg: high-side (in series with the leg from the
+bus), low-side (in series with the leg to ground), in-line (in series with the phase conductor),
+and the single DC-link shunt in the common return. The Hall/magnetic alternative replaces the shunt
+with a field sensor around the phase conductor.}
+\label{fig:topo}
+\end{figure}
+
+\begin{table}[!t]
+\centering
+\caption{Comparison of current-sense topologies for a three-phase inverter.}
+\label{tab:topo}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}p{2.5cm} L L L L@{}}
+\toprule
+\textbf{Attribute} & \textbf{Low-side shunt} & \textbf{High-side shunt} & \textbf{In-line (in-phase) shunt} & \textbf{Magnetic / Hall} \\
+\midrule
+Common-mode voltage at sense element & Near ground ($\approx0$) & At/near $\Vbus$ & Swings rail-to-rail at $\fsw$ with high $\mathrm{d}v/\mathrm{d}t$ & Galvanically isolated; no CM \\
+Measures true phase current at all duty cycles & No --- only while $Q_L$ conducts; blind near \SI{100}{\percent} duty & No --- only while $Q_H$ conducts & \textbf{Yes --- continuous, at any duty} & Yes \\
+Amplifier requirement & Low-CM CSA & High-CM CSA & High-CM CSA with PWM rejection & --- (sensor is the amplifier) \\
+DC capability & Yes & Yes & Yes & Yes (Hall) / No (CT, Rogowski) \\
+Suitability for FOC & Limited (reconstruction needed) & Limited & \textbf{Direct (per-phase, continuous)} & Good but costlier/larger \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For field-oriented control the inner current loop needs the \emph{actual} phase current
+continuously and independently of duty cycle. The low-side and high-side shunts measure current
+only while their switch conducts, becoming blind near \SI{100}{\percent} and \SI{0}{\percent} duty
+respectively; the single DC-link shunt requires duty-dependent reconstruction. The \emph{in-line}
+(in-phase) shunt, placed in series with the phase conductor, observes the true phase current at any
+duty cycle, which is why it is chosen here, in line with TI's TIDA-00913 reference
+design~\cite{tida00913}. Its cost is a sense element whose common-mode potential swings from
+rail to rail at the switching frequency with high $\mathrm{d}v/\mathrm{d}t$, which dictates the
+amplifier requirements in Section~\ref{sec:csa}.
+
+\subsection{Shunt selection}\label{sec:shunt}
+A metal-element (metal-strip) shunt is used for its low inductance and low temperature coefficient.
+The shunt voltage is $v_{\mathrm{sh}}(t)=\Rshunt\,i(t)+\mathrm{ESL}\,\mathrm{d}i/\mathrm{d}t$; at
+\SI{40}{\kilo\hertz} with fast switching edges the inductive term must be negligible against the
+\SI{0.1}{\milli\ohm} resistive term, which a metal-strip element with $<\SI{2}{\nano\henry}$
+achieves. At the worst-case continuous current ($\approx\SI{119}{\ampere}$ RMS) the shunt dissipates
+$I^2\Rshunt\approx119^2\times\SI{0.1}{\milli\ohm}\approx\SI{1.4}{\watt}$; a \SI{0.1}{\milli\ohm},
+\SI{5}{\watt} element gives ample margin. An alternative is two extremely common
+\SI{0.2}{\milli\ohm}, 2512 elements in parallel ($=\SI{0.1}{\milli\ohm}$, each dissipating
+$\approx\SI{0.7}{\watt}$).
+
+\subsection{Current-sense amplifier and gain}\label{sec:csa}
+The amplifier must (i) tolerate a common-mode voltage that swings from slightly below ground
+(body-diode conduction during dead-time, $\approx-\SI{1}{\volt}$) to $\Vbus=\SI{60}{\volt}$ plus
+ringing overshoot; (ii) reject the large common-mode $\mathrm{d}v/\mathrm{d}t$ at each switching
+edge so the output does not ring; (iii) be \emph{bidirectional}, since the phase current is AC; and
+(iv) have a bandwidth well above \SI{40}{\kilo\hertz}. The Texas Instruments INA240 satisfies all
+four: it is a voltage-output, zero-drift current-sense amplifier with a $-4$ to $+\SI{80}{\volt}$
+common-mode range \emph{independent of supply}, with enhanced PWM rejection explicitly designed to
+suppress the common-mode PWM transients of motor drives, offered in four fixed gains
+(\num{20}, \num{50}, \num{100}, \num{200}\,V/V)~\cite{ina240ds}. The $-\SI{4}{\volt}$ lower limit
+accepts the sub-ground excursion, and the $+\SI{80}{\volt}$ upper limit leaves \SI{20}{\volt} of
+reserve above the \SI{60}{\volt} bus for ringing. The PWM-rejection benefit is application-dependent
+rather than a single specified frequency; TI's validated TIDA-00913 reference design demonstrates
+accurate in-line operation up to PWM switching frequencies of \SI{100}{\kilo\hertz}, so the
+\SI{40}{\kilo\hertz} SVPWM here is comfortably within the validated range~\cite{ina240ds,tida00913}.
+
+On a \SI{3.3}{\volt} analog supply, the bidirectional output at zero current is centered by the two
+reference pins of the INA240, whose internal divider sets the output midpoint at
+$V_{\mathrm{ref}}=(V_{\mathrm{REF1}}+V_{\mathrm{REF2}})/2$~\cite{ina240ds}; tying REF1 to ground and
+REF2 to the \SI{3.3}{\volt} rail gives $V_{\mathrm{ref}}=\SI{1.65}{\volt}$. The output is then
+\begin{equation}
+V_{\mathrm{out}} = V_{\mathrm{ref}} + G\,\Rshunt\,i_{\mathrm{ph}} .
+\label{eq:csaout}
+\end{equation}
+With a rail-to-rail output the usable single-sided swing is $\approx\SI{1.45}{\volt}$ (\SI{0.2}{\volt}
+margin to each rail). Choosing gain $G=50$ (INA240A2), the linear full-scale peak current is
+\begin{equation}
+\hat I_{\mathrm{FS}} = \frac{1.45}{G\,\Rshunt}
+   = \frac{1.45}{50\times\SI{0.1}{\milli\ohm}} = \SI{290}{\ampere}\ \text{peak}\ (\SI{205}{\ampere}\,\text{RMS}).
+\end{equation}
+The worst-case peak of \SI{169}{\ampere} produces an output excursion of
+$G\Rshunt\hat I_{\mathrm{ph}}=50\times\SI{0.1}{\milli\ohm}\times169=\SI{0.85}{\volt}$, i.e.\
+$V_{\mathrm{out}}\in[0.80,2.50]\,\si{\volt}$, leaving $\approx\SI{0.5}{\volt}$ before clipping. This
+reserve is deliberately kept for transient overshoot and lets an over-current (OC) threshold be set
+at $\approx\SI{220}{\ampere}$ peak ($\approx1.3\times\hat I_{\mathrm{ph}}^{\max}$), detectable by an
+STM32G4 analog comparator or in software before the amplifier saturates. The quantization and offset,
+referred to current, are
+\begin{align}
+\Delta I_{\mathrm{LSB}} &= \frac{V_{\mathrm{REF+}}/2^{N}}{G\,\Rshunt}
+   = \frac{3.3/4096}{50\times\SI{0.1}{\milli\ohm}} = \SI{0.16}{\ampere/LSB},\\
+I_{\mathrm{os}} &= \frac{V_{\mathrm{os(max)}}}{\Rshunt} = \frac{\SI{25}{\micro\volt}}{\SI{0.1}{\milli\ohm}}
+   = \SI{0.25}{\ampere},
+\end{align}
+both negligible against a \SI{119}{\ampere} signal (the INA240 zero-drift architecture gives
+$V_{\mathrm{os}}\le\SI{25}{\micro\volt}$)~\cite{ina240ds}. The gain-50 / \SI{0.1}{\milli\ohm} pair is
+therefore preferred over a gain-20 / \SI{0.25}{\milli\ohm} pair, which would dissipate
+$\approx\SI{4.6}{\watt}$ per shunt for the same full scale.
+
+\subsection{ADC interface and output filtering}\label{sec:csafilter}
+For FOC the phase current is sampled \emph{synchronously} with the PWM carrier (typically at the
+counter peak/valley) so that the sampling instant coincides with the middle of the switching state,
+where the inductor ripple is at its average value; this naturally rejects the \SI{40}{\kilo\hertz}
+ripple and its harmonics without a heavy filter~\cite{an5346}. A heavy anti-alias filter would
+instead add phase lag to the very signal on which the current loop closes, degrading the loop. The
+CSA output therefore uses only a light first-order RC filter ($R_f=\SI{100}{\ohm}$,
+$C_f=\SI{2.2}{\nano\farad}$) that (i) band-limits the high-frequency switching noise and ringing
+(corner $f_c=1/2\pi R_fC_f=\SI{723}{\kilo\hertz}$, far above the kHz-range loop content but damping
+the tens-of-MHz ringing) and (ii) acts as a charge reservoir for the ADC sample-and-hold. The low
+output impedance of the INA240 drives this network and the ADC sampling capacitor with ample settling
+margin. STM32G4 hardware oversampling/averaging may be enabled for further noise reduction at the cost
+of bandwidth~\cite{an5346}. Fig.~\ref{fig:csa} shows the complete per-phase chain.
+
+\begin{figure}[!t]
+\centering
+\begin{circuitikz}[scale=1.0,transform shape,american]
+\draw (0,4.7) node[anchor=east]{phase node} -- (1.3,4.7);
+\draw[fill=yellow!30] (1.3,4.5) rectangle (2.5,4.9);
+\draw (1.9,5.2) node{\scriptsize $\Rshunt=\SI{0.1}{\milli\ohm}$ (Kelvin)};
+\draw (2.5,4.7) -- (3.9,4.7) node[anchor=west]{to motor};
+\draw (2.3,4.5) -- (2.3,3.0) -- (2.7,3.0);
+\draw (1.5,4.5) -- (1.5,2.5) -- (2.7,2.5);
+\draw (2.45,3.0) node[anchor=south]{\scriptsize IN+};
+\draw (2.0,2.5) node[anchor=south]{\scriptsize IN--};
+\draw (2.7,1.9) rectangle (5.1,3.5);
+\draw (3.9,2.45) node{\small INA240A2};
+\draw (3.9,3.05) node{\scriptsize $G=50$};
+\draw (3.4,3.5) -- (3.4,4.0) node[anchor=east]{\scriptsize $3V3_{\mathrm A}$+\SI{100}{\nano\farad}};
+\draw (3.9,1.9) -- (3.9,1.2) node[anchor=north,align=center]{\scriptsize REF1=GND, REF2=3V3\\\scriptsize $\Rightarrow V_{\mathrm{ref}}=\SI{1.65}{\volt}$};
+\draw (5.1,2.7) -- (5.6,2.7) to[R,l={$R_f$, \SI{100}{\ohm}}] (7.1,2.7);
+\draw (7.1,2.7) node[circ]{} to[C,l={$C_f$, \SI{2.2}{\nano\farad}}] (7.1,1.5) node[ground]{};
+\draw (7.1,2.7) -- (7.8,2.7) node[anchor=west]{\scriptsize ADC};
+\end{circuitikz}
+\caption{In-line per-phase current-sense chain: Kelvin-connected \SI{0.1}{\milli\ohm} metal-strip
+shunt, INA240A2 ($G=50$) with mid-scale reference, and a light \SI{723}{\kilo\hertz} RC into the
+STM32G4 ADC. Three identical chains are used (phases U, V, W).}
+\label{fig:csa}
+\end{figure}
+
+%=====================================================================
+\section{Voltage Sensing}\label{sec:voltage}
+
+\subsection{Requirements}
+Hardware voltage measurement is needed for (i) the DC-bus voltage --- for over-/under-voltage
+protection, modulation-index scaling, and power calculation --- and (ii) each of the three phase-node
+voltages --- for output monitoring, phase-loss / motor-disconnect detection, and diagnostics. The
+phase-voltage chains also leave a hardware path open for future back-EMF-based position observation
+without a board change, although the present design commutates from Hall sensors and does not rely
+on phase-voltage feedback for control. All four channels share the inverter ground (the design is
+non-isolated and uses a single shared ground), so each is a grounded resistive divider feeding an
+STM32G4 ADC channel. The bus channel is slow (protection/scaling); the phase channels preserve more
+bandwidth for monitoring and for the optional back-EMF capability.
+
+\subsection{Resistive-divider design}\label{sec:divider}
+The ADC conversion range is $0$ to $V_{\mathrm{REF+}}$; using
+$V_{\mathrm{REF+}}=V_{\mathrm{DDA}}=\SI{3.3}{\volt}$ maximizes the range. The divider ratio
+$k=(R_{\mathrm{top}}+R_{\mathrm{bot}})/R_{\mathrm{bot}}$ maps the maximum measured voltage to near
+full scale with reserve. Choosing $R_{\mathrm{top}}=\SI{110}{\kilo\ohm}$ and
+$R_{\mathrm{bot}}=\SI{4.7}{\kilo\ohm}$,
+\begin{equation}
+k=\frac{R_{\mathrm{top}}+R_{\mathrm{bot}}}{R_{\mathrm{bot}}}=\frac{110+4.7}{4.7}=24.4,
+\qquad V_{\mathrm{ADC}}=\frac{V_{\mathrm{in}}}{k}.
+\end{equation}
+This maps $\Vbus=\SI{60}{\volt}\to\SI{2.46}{\volt}$ and $\SI{30}{\volt}\to\SI{1.23}{\volt}$, with
+full scale at $\approx\SI{73}{\volt}$ --- enough headroom to read transients above the \SI{60}{\volt}
+nominal maximum. The same ratio is used for the phase dividers, since a phase node can reach the bus
+voltage. The standing current and dissipation at \SI{60}{\volt} are
+\begin{equation}
+I_{\mathrm{div}}=\frac{60}{R_{\mathrm{top}}+R_{\mathrm{bot}}}=\SI{523}{\micro\ampere},\quad
+P_{R_{\mathrm{top}}}=I_{\mathrm{div}}^2R_{\mathrm{top}}=\SI{30}{\milli\watt},
+\end{equation}
+so all four dividers together draw $\approx\SI{126}{\milli\watt}$ --- negligible. The top resistor
+sees the full bus voltage; a single thick-film \SI{110}{\kilo\ohm} chip rated $\ge\SI{150}{\volt}$
+(e.g.\ 0805/1206) is adequate at \SI{60}{\volt}, but splitting $R_{\mathrm{top}}$ into two series
+\SI{55}{\kilo\ohm} parts is recommended to halve the per-component voltage stress and improve ratio
+matching. The Th\'evenin source impedance presented to the ADC is
+\begin{equation}
+R_{\mathrm{src}}=R_{\mathrm{top}}\parallel R_{\mathrm{bot}}
+   =\frac{110\text{k}\times4.7\text{k}}{110\text{k}+4.7\text{k}}=\SI{4.51}{\kilo\ohm},
+\label{eq:rsrc}
+\end{equation}
+which is the key quantity for the buffer question of Section~\ref{sec:buffer}.
+
+\subsection{Does the ADC need an op-amp buffer? A quantitative answer}\label{sec:buffer}
+An STM32G4 ADC channel samples by connecting the source, through an internal multiplexer/switch
+resistance $R_{\mathrm{ADC}}$, to a sampling capacitor $C_{\mathrm{ADC}}$ for the programmed sampling
+time $t_s$ (Fig.~\ref{fig:adcmodel}). The capacitor must settle to within $\tfrac12$\,LSB of the
+source voltage. For an $N$-bit conversion this requires~\cite{an2834,an5346}
+\begin{equation}
+t_s \;\ge\; \bigl(R_{\mathrm{AIN}}+R_{\mathrm{ADC}}\bigr)\,C_{\mathrm{ADC}}\,\ln\!\bigl(2^{\,N+1}\bigr),
+\label{eq:settle}
+\end{equation}
+where $R_{\mathrm{AIN}}=R_{\mathrm{src}}$ is the external source impedance. ST does not publish
+$R_{\mathrm{ADC}}$/$C_{\mathrm{ADC}}$ directly for the G4; instead the datasheet gives a ``maximum
+$R_{\mathrm{AIN}}$ versus sampling time'' table and recommends choosing the sampling time from it for
+the given source impedance~\cite{an5346}. Using the AN2834 settling model with representative values
+$C_{\mathrm{ADC}}\approx\SI{5}{\pico\farad}$, $R_{\mathrm{ADC}}\approx\SI{2}{\kilo\ohm}$, and
+$\ln(2^{13})=9.01$ for the 12-bit mode,
+\begin{equation}
+t_s \ge (4510+2000)(5\times10^{-12})(9.01)=\SI{293}{\nano\second}.
+\end{equation}
+At a \SI{60}{\mega\hertz} ADC clock this is \num{17.6} cycles, whereas the STM32G4 offers
+sampling-time settings up to \num{640.5} cycles; the \num{47.5}-cycle setting alone is
+\SI{792}{\nano\second} --- more than $2.7\times$ the requirement. Because the bus and phase voltages
+need only kHz-rate refresh, spending a longer sampling time costs nothing. Therefore:
+\begin{center}
+\emph{No external op-amp buffer is required for the voltage dividers.}
+\end{center}
+The divider source impedance settles to 12-bit accuracy well within a trivially available sampling
+time; a small filter capacitor (Section~\ref{sec:vfilter}) further reduces the effective source
+impedance at the sampling instant.
+
+\begin{figure}[!t]
+\centering
+\begin{circuitikz}[scale=1.0,transform shape,american]
+\draw (0,1.2) node[anchor=east]{$V_{\mathrm{div}}$} to[R,l={$R_{\mathrm{AIN}}{=}R_{\mathrm{src}}$}] (3,1.2);
+\draw (3,1.2) to[R,l=$R_{\mathrm{ADC}}$] (5,1.2);
+\draw (5,1.2) to[nos,l=$t_s$] (6.2,1.2);
+\draw (6.2,1.2) to[C,l=$C_{\mathrm{ADC}}$] (6.2,0) node[ground]{};
+\draw (6.2,1.2) -- (7.0,1.2) node[anchor=west]{SAR};
+\end{circuitikz}
+\caption{First-order model of the STM32G4 ADC input stage used in \eqref{eq:settle}: the divider
+source impedance $R_{\mathrm{src}}$ in series with the internal switch resistance charges the
+sampling capacitor $C_{\mathrm{ADC}}$ over the sampling window $t_s$.}
+\label{fig:adcmodel}
+\end{figure}
+
+\begin{table}[!t]
+\centering
+\caption{Op-amp buffer before the ADC: benefits versus costs.}
+\label{tab:buffer}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}L L@{}}
+\toprule
+\textbf{Arguments for a buffer} & \textbf{Arguments against a buffer}\\
+\midrule
+Low output impedance $\Rightarrow$ fast settling, short sampling time, high multiplexed scan rate &
+Adds its own offset, drift, noise, and finite-bandwidth error to an \emph{absolute} measurement\\
+Isolates the divider from ADC charge-injection ``kickback'' and inter-channel crosstalk &
+Extra BOM cost, board area, and supply decoupling\\
+Enables an active anti-alias filter &
+Becomes an additional calibration burden\\
+Prevents resistive loading of the divider &
+Unnecessary here: the required $t_s$ is small, \eqref{eq:settle}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+If a buffer were ever desired --- for example to share one divider among several fast multiplexed
+channels, or to add an active filter --- it should be realized with the \emph{MCU's own resources}
+rather than an external IC: the STM32G473 contains operational amplifiers that can be configured as
+unity-gain followers (or PGA) with their output routed \emph{internally} to an ADC channel, which
+both removes the external-pin noise-pickup path and costs nothing on the BOM~\cite{an5306,stm32g473ds}.
+ST documents exactly this follower-to-ADC use and recommends a \SI{200}{\nano\second} sampling time
+when reading an internal op-amp output~\cite{an5346,an5306}. For the present low-rate voltage
+channels the conclusion is to omit the buffer and use a longer sampling time plus a filter capacitor.
+
+\subsection{Bus/phase filtering and protection}\label{sec:vfilter}
+A capacitor $C_{\mathrm{f}}$ in parallel with $R_{\mathrm{bot}}$ forms a first-order low-pass filter
+with corner $f_c=1/(2\pi R_{\mathrm{src}}C_{\mathrm{f}})$.
+\textbf{Bus channel:} $C_{\mathrm{f}}=\SI{22}{\nano\farad}$ gives $f_c=\SI{1.6}{\kilo\hertz}$, removing
+the switching ripple from the slow bus measurement. \textbf{Phase channels:} the filter must reject
+the \SI{40}{\kilo\hertz} PWM while passing the fundamental of the monitored phase voltage; a corner
+of $f_c\approx$\,2--\SI{3}{\kilo\hertz} attenuates the carrier at the cost of a phase lag
+$\phi=\arctan(f_e/f_c)$, where $f_e$ is the electrical frequency. If the phase voltages are used for
+back-EMF observation (the provisioned future capability), this lag is deterministic and is
+compensated in firmware (the observer shifts the sampled phase by $\phi$); Table~\ref{tab:phase}
+lists representative values. \textbf{Protection:} during dead-time/body-diode conduction a phase node
+swings to $\approx-\SI{1}{\volt}$, scaled by the divider to $-1/24.4=-\SI{41}{\milli\volt}$ at the
+ADC pin --- small, but a Schottky clamp (e.g.\ BAT54S) from the ADC node to ground and to
+$V_{\mathrm{DDA}}$ is added as insurance against over-/under-range transients.
+
+\begin{table}[!t]
+\centering
+\caption{Phase low-pass filter delay $\phi=\arctan(f_e/f_c)$ (compensated in firmware if back-EMF observation is used).}
+\label{tab:phase}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c c c c}
+\toprule
+$f_c$ & $f_e=\SI{200}{\hertz}$ & $f_e=\SI{500}{\hertz}$ & $f_e=\SI{1000}{\hertz}$\\
+\midrule
+\SI{2}{\kilo\hertz} & \ang{5.7} & \ang{14.0} & \ang{26.6}\\
+\SI{3}{\kilo\hertz} & \ang{3.8} & \ang{9.5}  & \ang{18.4}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+\centering
+\begin{circuitikz}[scale=1.0,transform shape,american]
+\draw (0,3.2) node[anchor=east]{$V_{\mathrm{in}}$ (bus/phase)} -- (1.0,3.2);
+\draw (1.0,3.2) to[R,l=$R_{\mathrm{top}}$,a=\SI{110}{\kilo\ohm}] (1.0,1.6);
+\draw (1.0,1.6) node[circ]{} -- (2.6,1.6) node[anchor=west]{to ADC};
+\draw (1.0,1.6) to[R,l=$R_{\mathrm{bot}}$,a=\SI{4.7}{\kilo\ohm}] (1.0,0.0) node[ground]{};
+\draw (2.0,1.6) to[C,l=$C_f$] (2.0,0.0) node[ground]{};
+\draw (2.6,1.6) -- (3.2,1.6);
+\draw (3.2,1.6) to[Do] (3.2,2.8) node[anchor=south]{\scriptsize $V_{\mathrm{DDA}}$};
+\draw (3.2,1.6) node[circ]{}; \draw (3.6,1.6) to[Do] (3.6,0.4) node[ground]{};
+\draw (3.4,2.2) node[anchor=west]{\scriptsize BAT54S};
+\end{circuitikz}
+\caption{Measurement divider (ratio \num{24.4}), first-order filter capacitor, and Schottky clamp to
+$V_{\mathrm{DDA}}$/GND. Identical networks serve the DC bus ($f_c\approx\SI{1.6}{\kilo\hertz}$) and
+the three phase nodes ($f_c\approx$\,2--\SI{3}{\kilo\hertz}).}
+\label{fig:divider}
+\end{figure}
+
+%=====================================================================
+\section{RC Snubber on the Switching Node}\label{sec:snubber}
+
+\subsection{Origin of the ringing}
+At each turn-off, the parasitic inductance $L_p$ of the commutation loop (package leads, PCB traces,
+bus-capacitor ESL) resonates with the MOSFET output capacitance $C_o$ ($C_{oss}$ plus mounting
+capacitance), producing a damped oscillation on the switching node at
+\begin{equation}
+f_{\mathrm{ring}}=\frac{1}{2\pi\sqrt{L_p C_o}},
+\label{eq:fring}
+\end{equation}
+typically in the tens of MHz. The ringing stresses the device voltage, radiates EMI, and couples
+into signal lines. An RC damping snubber placed across the device adds a resistor $R_s$ (in series
+with a capacitor $C_s$) that dissipates the resonant energy~\cite{severns}.
+
+\subsection{Design methodology}
+The rigorous, layout-independent procedure measures the ringing on the assembled board~\cite{severns}:
+\begin{enumerate}[leftmargin=1.4em]
+\item Measure the ring period without a snubber, $T_1=1/f_{\mathrm{ring}}$, on the switching node.
+\item Add a known capacitor $C_{\mathrm{test}}$ across the device and measure the new period $T_2$.
+\item Since $T_1=2\pi\sqrt{L_pC_o}$ and $T_2=2\pi\sqrt{L_p(C_o+C_{\mathrm{test}})}$, squaring and
+subtracting eliminates $L_p$:
+\begin{equation}
+L_p=\frac{T_2^{2}-T_1^{2}}{4\pi^{2}\,C_{\mathrm{test}}},\qquad
+C_o=\frac{T_1^{2}}{4\pi^{2}L_p}.
+\label{eq:extract}
+\end{equation}
+\end{enumerate}
+The damping resistor is set to the characteristic impedance of the resonance,
+\begin{equation}
+R_s=\sqrt{\frac{L_p}{C_o}},
+\label{eq:rs}
+\end{equation}
+giving approximately critical damping~\cite{severns}. The snubber capacitor is chosen a few times
+larger than $C_o$ so that $R_s$ dominates the loop, yet small enough to limit dissipation; the
+resistor power is the energy stored in $C_s$, charged and discharged once per switching cycle,
+\begin{equation}
+P_{R_s}=C_s\,\Vbus^{2}\,\fsw .
+\label{eq:psnub}
+\end{equation}
+
+\subsection{Estimated values (to be validated on the bench)}
+No assembled board exists yet, so $L_p$ cannot be measured; the values below are a first estimate for
+footprint selection only and \emph{must} be confirmed with the two-measurement method of
+\eqref{eq:extract} on the prototype. From the IPT015N10N5 datasheet, $C_{oss}=\SI{1800}{\pico\farad}$
+(at the datasheet test condition; $C_{oss}$ is strongly voltage-dependent)~\cite{ipt015ds,ipt015part};
+adding $\approx\SI{200}{\pico\farad}$ of mounting capacitance gives $C_o\approx\SI{2}{\nano\farad}$.
+Taking a representative $L_p\approx\SI{10}{\nano\henry}$ for a compact layout,
+\begin{align}
+f_{\mathrm{ring}}&=\frac{1}{2\pi\sqrt{(10\text{n})(2\text{n})}}=\SI{35.6}{\mega\hertz},\\
+R_s&=\sqrt{\frac{\SI{10}{\nano\henry}}{\SI{2}{\nano\farad}}}=\SI{2.24}{\ohm}\;\to\;\SI{2.2}{\ohm}\ (\text{E12}).
+\end{align}
+Choosing $C_s=\SI{2.2}{\nano\farad}$ ($\approx C_o$), the worst-case dissipation (\SI{60}{\volt} bus)
+from \eqref{eq:psnub} is
+\begin{equation}
+P_{R_s}=\SI{2.2}{\nano\farad}\times 60^{2}\times\SI{40}{\kilo\hertz}=\SI{0.32}{\watt}\ \text{per snubber},
+\end{equation}
+i.e.\ $\le\SI{1.9}{\watt}$ for all six switches if every footprint is populated. A
+$\ge\SI{1}{\watt}$ resistor is specified for margin.
+
+\subsection{Component selection}
+$C_s$ must be C0G/NP0: Class-2 (X7R) ceramics lose much of their capacitance under DC bias and
+self-heat under the high-frequency ripple, whereas C0G is lossless and stable. A
+\SI{2.2}{\nano\farad}, \SI{100}{\volt} C0G part is the baseline (a \SI{200}{\volt} part adds reserve
+against ringing overshoot). $R_s$ must be non-inductive: an SMD thin/thick-film chip (1206 or 2512),
+never wirewound, so that its own inductance does not defeat the snubber~\cite{severns}. The RC is
+placed directly across the drain--source of each switch with the shortest possible loop. Per the
+specification, all six RC sites are laid out as \textbf{do-not-populate (DNP)} footprints: if the
+prototype shows acceptable ringing they remain empty, and if not, they are populated using the
+bench-measured values from \eqref{eq:extract}--\eqref{eq:rs}. Fig.~\ref{fig:snub} shows the placement
+and qualitative effect.
+
+\begin{figure}[!t]
+\centering
+\begin{circuitikz}[scale=0.95,transform shape,american]
+\draw (0,3.4) node[anchor=east]{switch node} -- (1.2,3.4);
+\draw (1.2,2.6) rectangle (2.2,3.4);
+\draw (1.7,3.0) node{\small $Q$};
+\draw (1.7,2.6) -- (1.7,1.6) node[ground]{};
+\draw (1.7,3.4) -- (3.0,3.4) to[R,l=$R_s$\,\SI{2.2}{\ohm}] (3.0,2.6)
+      to[C,l=$C_s$\,\SI{2.2}{\nano\farad}] (3.0,1.6) node[ground]{};
+\draw (1.7,3.4) node[circ]{};
+\draw (3.0,3.4) node[anchor=south]{\scriptsize DNP RC};
+\begin{scope}[shift={(4.6,1.7)}]
+\draw[->] (0,0) -- (3.2,0) node[anchor=north]{\scriptsize $t$};
+\draw[->] (0,-0.9) -- (0,1.5) node[anchor=east]{\scriptsize $v$};
+\draw[blue,thick] plot coordinates {(0.00,0.85) (0.05,0.73) (0.11,0.46) (0.16,0.10) (0.21,-0.26) (0.27,-0.54) (0.32,-0.68) (0.38,-0.66) (0.43,-0.50) (0.48,-0.24) (0.54,0.06) (0.59,0.33) (0.64,0.50) (0.70,0.56) (0.75,0.49) (0.80,0.31) (0.86,0.08) (0.91,-0.16) (0.96,-0.34) (1.02,-0.44) (1.07,-0.44) (1.12,-0.34) (1.18,-0.17) (1.23,0.03) (1.29,0.20) (1.34,0.33) (1.39,0.37) (1.45,0.33) (1.50,0.22) (1.55,0.06) (1.61,-0.09) (1.66,-0.22) (1.71,-0.29) (1.77,-0.29) (1.82,-0.23) (1.88,-0.12) (1.93,0.01) (1.98,0.13) (2.04,0.21) (2.09,0.24) (2.14,0.22) (2.20,0.15) (2.25,0.05) (2.30,-0.05) (2.36,-0.14) (2.41,-0.19) (2.46,-0.19) (2.52,-0.15) (2.57,-0.08) (2.62,0.00) (2.68,0.08) (2.73,0.14) (2.79,0.16) (2.84,0.15) (2.89,0.10) (2.95,0.04) (3.00,-0.03)};
+\draw[red,thick] plot coordinates {(0.00,0.85) (0.05,0.67) (0.11,0.38) (0.16,0.08) (0.21,-0.18) (0.27,-0.35) (0.32,-0.41) (0.38,-0.36) (0.43,-0.25) (0.48,-0.11) (0.54,0.03) (0.59,0.13) (0.64,0.18) (0.70,0.18) (0.75,0.15) (0.80,0.09) (0.86,0.02) (0.91,-0.04) (0.96,-0.07) (1.02,-0.09) (1.07,-0.08) (1.12,-0.06) (1.18,-0.03) (1.23,0.00) (1.29,0.03) (1.34,0.04) (1.39,0.04) (1.45,0.03) (1.50,0.02) (1.55,0.01) (1.61,-0.01) (1.66,-0.02) (1.71,-0.02) (1.77,-0.02) (1.82,-0.01) (1.88,-0.01) (1.93,0.00) (2.04,0.01) (2.20,0.00) (2.62,0.00) (3.00,0.00)};
+\node[blue,anchor=west] at (1.3,1.15) {\scriptsize without snubber};
+\node[red,anchor=west] at (1.3,0.62) {\scriptsize with snubber};
+\end{scope}
+\end{circuitikz}
+\caption{DNP RC snubber across each switch and its qualitative effect on switching-node ringing: the
+damping resistor $R_s=\sqrt{L_p/C_o}$ removes the resonant energy. The values shown are first
+estimates to be replaced by bench measurements via \eqref{eq:extract}.}
+\label{fig:snub}
+\end{figure}
+
+%=====================================================================
+\section{Grounding, Noise, and Filtering Strategy}\label{sec:noise}
+
+The system uses a \emph{single shared ground}: the high-current power return, the analog/signal
+reference, and all external interfaces sit on one common ground net. There is no separate analog
+ground plane; at \SI{40}{\kilo\hertz} and currents above \SI{100}{\ampere}, noise immunity is
+obtained through layout discipline rather than ground partitioning. Filtering is applied at each
+point where a sensitive analog signal is generated or where switching noise is injected:
+\begin{itemize}[leftmargin=1.3em]
+\item \textbf{CSA output} (Section~\ref{sec:csafilter}): a light \SI{723}{\kilo\hertz} RC
+      (\SI{100}{\ohm}/\SI{2.2}{\nano\farad}) per phase, relying on synchronous sampling rather than a
+      delay-inducing anti-alias filter~\cite{an5346}.
+\item \textbf{CSA input}: the input series resistors must be \emph{matched} between IN+ and IN-- to
+      preserve CMRR; the INA240 enhanced PWM rejection is the primary defense against the common-mode
+      transient, so a heavy input filter is deliberately avoided~\cite{ina240ds}.
+\item \textbf{Bus divider}: \SI{1.6}{\kilo\hertz} RC (Section~\ref{sec:vfilter}).
+\item \textbf{Phase dividers}: 2--\SI{3}{\kilo\hertz} RC with firmware phase-delay compensation where
+      used for back-EMF observation, plus Schottky clamps.
+\item \textbf{Analog supply}: a ferrite bead between $V_{\mathrm{DD}}$ and $V_{\mathrm{DDA}}$ with
+      \SI{1}{\micro\farad}\,$+$\,\SI{100}{\nano\farad} decoupling on $V_{\mathrm{DDA}}$; separate
+      \SI{1}{\micro\farad}\,$+$\,\SI{100}{\nano\farad} on $V_{\mathrm{REF+}}$, plus the VREFBUF
+      decoupling specified by ST if the internal reference is used~\cite{stm32g473ds}.
+\item \textbf{INA240 supply}: \SI{100}{\nano\farad}\,$+$\,\SI{1}{\micro\farad} at the pin.
+\item \textbf{DC-link decoupling}: low-ESL ceramics in parallel with the bulk electrolytics, close to
+      each half-bridge, to minimize the commutation-loop inductance $L_p$ --- attacking the
+      \emph{source} of the ringing the snubber would otherwise have to damp~\cite{severns}.
+\item \textbf{Layout}: Kelvin (four-wire) sensing across each shunt; short, tightly coupled
+      differential sense traces routed away from the high-$\mathrm{d}i/\mathrm{d}t$ switching-current
+      return paths; a compact commutation loop; and a solid, low-impedance ground pour so that the
+      shared-path voltage drops are minimized. These layout measures are as important as the
+      component filters at this power level.
+\end{itemize}
+
+%=====================================================================
+\section{Thermal Considerations}\label{sec:thermal}
+
+The MOSFETs are mounted to a liquid-cooled cold plate. At the worst-case corner each device carries
+$\approx\SI{60}{\ampere}$ RMS, giving a conduction loss of
+$\approx 60^2\times\SI{1.5}{\milli\ohm}\approx\SI{5.4}{\watt}$ cold, rising toward $\sim\SI{8}{\watt}$
+as $\Rdson$ increases with junction temperature; switching loss at \SI{40}{\kilo\hertz} and the
+shunt loss ($\approx\SI{1.4}{\watt}$ per phase at \SI{119}{\ampere} RMS) add to the budget. Using the
+device junction-to-case path (\SI{0.4}{\kelvin\per\watt}) and an adequate thermal-interface material
+to the cold plate keeps the junction temperature within rating. The coolant inlet temperature and
+flow rate govern the junction temperature far more than the air ambient and are set per deployment.
+Low-inductance layout and adequate copper for the $\sim\SI{169}{\ampere}$ peak phase current and
+$\sim\SI{132}{\ampere}$ bus current remain board-level tasks, essential to realizing the calculated
+switching performance.
+
+%=====================================================================
+\section{Bill of Materials (Analog Front-End)}\label{sec:bom}
+
+Table~\ref{tab:bom} lists the analog front-end components. The active devices (INA240A2PWR,
+IPT015N10N5) and standard chip passives are high-volume parts; the only component to confirm for
+availability at order time is the high-power shunt, for which an alternative of two very common
+\SI{0.2}{\milli\ohm} 2512 elements in parallel ($=\SI{0.1}{\milli\ohm}$) is given. Quantities assume
+one three-phase board; the snubber components are DNP (footprints only).
+
+\begin{table}[!t]
+\centering
+\caption{Analog front-end bill of materials. Stock varies; confirm at order time.}
+\label{tab:bom}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.7cm} c L >{\raggedright\arraybackslash}p{2.6cm} L@{}}
+\toprule
+\textbf{Function} & \textbf{Qty} & \textbf{Component / value} & \textbf{Key rating} & \textbf{Note}\\
+\midrule
+Current-sense amplifier & 3 & TI INA240A2PWR & $G{=}50$, $-4$ to \SI{80}{\volt} CM & one per phase~\cite{lcsc}\\
+Phase shunt & 3 & \SI{0.1}{\milli\ohm} metal element, \SI{5}{\watt} & $\le\SI{2}{\nano\henry}$ ESL, Kelvin & confirm stock; see alt.\ below\\
+\;(shunt alternative) & 6 & \SI{0.2}{\milli\ohm} 2512 $\times2\,\parallel$ & \SI{2}{\watt} each & very common; $=\SI{0.1}{\milli\ohm}$\\
+CSA output filter R & 3 & \SI{100}{\ohm} 0603 1\% & --- & with $C_f$\\
+CSA output filter C & 3 & \SI{2.2}{\nano\farad} C0G 0603 & \SI{50}{\volt} & $f_c\,\SI{723}{\kilo\hertz}$\\
+Divider top & 4(8) & \SI{110}{\kilo\ohm} ($2\times\SI{55}{\kilo\ohm}$) 0805 1\% & $\ge\SI{150}{\volt}$ & bus $+$ 3 phases\\
+Divider bottom & 4 & \SI{4.7}{\kilo\ohm} 0603 1\% & --- & ratio \num{24.4}\\
+Bus filter cap & 1 & \SI{22}{\nano\farad} C0G/X7R 0603 & \SI{50}{\volt} & $f_c\,\SI{1.6}{\kilo\hertz}$\\
+Phase filter cap & 3 & \SI{22}{\nano\farad} 0603 & \SI{50}{\volt} & $f_c\approx$2--\SI{3}{\kilo\hertz}\\
+ADC clamp diode & 4 & BAT54S dual Schottky & \SI{30}{\volt} & to $V_{\mathrm{DDA}}$/GND\\
+Snubber R (DNP) & 6 & \SI{2.2}{\ohm} 1206 non-ind., $\ge\SI{1}{\watt}$ & --- & footprint only\\
+Snubber C (DNP) & 6 & \SI{2.2}{\nano\farad} C0G 1206 & \SI{100}{\volt} (\SI{200}{\volt} opt.) & footprint only\\
+Ferrite bead on VDDA & 1 & \SI{600}{\ohm}@\SI{100}{\mega\hertz} 0805 & --- & $V_{\mathrm{DD}}\!\to\!V_{\mathrm{DDA}}$\\
+Decoupling set & --- & \SI{100}{\nano\farad}/\SI{1}{\micro\farad} 0402/0603 & \SI{16}{\volt}+ & CSA, VDDA, VREF\\
+Power MOSFET (ref.) & 12 & Infineon IPT015N10N5 & \SI{100}{\volt}/\SI{1.5}{\milli\ohm} & power stage~\cite{lcsc}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%=====================================================================
+\section{Conclusion}\label{sec:concl}
+
+A complete power, gate-drive, and analog input stage has been designed and costed for a
+\SIrange{19}{60}{\volt}, \mbox{2.5--5\,kW}, \SI{40}{\kilo\hertz} BLDC/PMSM FOC inverter. The Infineon
+IPT015N10N5 and Texas Instruments UCC27211A-Q1 form a compatible pair across the full battery range:
+at the highest bus voltage (\SI{60}{\volt}) the \SI{100}{\volt} MOSFET gives a $\approx1.67\times$ DC
+blocking margin with about \SI{40}{\volt} of reserve for turn-off overshoot, and at the lowest bus
+voltage (\SI{19}{\volt}) the worst-case current reaches $\approx\SI{132}{\ampere}$ on the bus
+($\approx\SI{60}{\ampere}$ per device), far below the $2\times\SI{250}{\ampere}$ rating of the
+paralleled pair. One channel of the \SI{120}{\volt}, \SI{3.7}{\ampere}/\SI{4.5}{\ampere} driver
+switches the \emph{paralleled} gate charge in under \SI{30}{\nano\second} at a moderate
+$\approx\SI{2}{\volt\per\nano\second}$, far below its \SI{50}{\volt\per\nano\second} limit. The main
+consequence of paralleling two high-$Q_g$ devices is that the bootstrap and $V_{DD}$ decoupling
+capacitors must be $\approx$1--2\,\si{\micro\farad} rather than the datasheet's nominal
+\SI{0.1}{\micro\farad}, a result that follows directly from the charge-droop equations. The complete
+gate-drive passive set is $C_{BOOT}=\SI{2.2}{\micro\farad}$, $C_{VDD}=\SI{4.7}{\micro\farad}+\SI{0.1}{\micro\farad}$,
+an asymmetric gate network of $R_{on}=\SI{3.3}{\ohm}$ with a parallel $R_{off}=\SI{1.0}{\ohm}$ and OFF
+Schottky (Nexperia PMEG4030ER) per device for soft turn-on and fast turn-off, and $R_{GS}=\SI{10}{\kilo\ohm}$
+per device.
+
+The worst-case continuous phase current was derived from the supply/power range as
+$\approx\SI{119}{\ampere}$ RMS ($\approx\SI{169}{\ampere}$ peak) at the \SI{2.5}{\kilo\watt}/\SI{19}{\volt}
+corner, and used to size a Kelvin \SI{0.1}{\milli\ohm}/\SI{5}{\watt} metal-element shunt read by an
+INA240A2 ($G{=}50$) with mid-scale reference, giving a $\pm\SI{290}{\ampere}$-peak linear range at
+\SI{0.16}{\ampere/LSB} resolution and $<\SI{0.25}{\ampere}$ offset. The in-line topology is justified
+against the low-side, high-side, single-shunt, and Hall alternatives by its continuous,
+duty-independent observability, consistent with TI TIDA-00913. For the voltage dividers (ratio
+\num{24.4}) it was shown \emph{quantitatively} that no external buffer is required: the
+\SI{4.5}{\kilo\ohm} source settles to 12-bit accuracy in $<\SI{300}{\nano\second}$, well within the
+available sampling window, and the six STM32G473 internal op-amps remain available as a no-cost
+fallback. The RC snubber was sized from the published $C_{oss}$ and the standard two-measurement
+ringing-extraction method and laid out as a DNP footprint on all six switches. Filtering was
+specified at the CSA output, the dividers, the analog supply/reference, and the DC bus, together with
+the single-shared-ground and Kelvin-sensing layout measures that are decisive at this power level.
+The next step is prototype bring-up: measuring the actual switching-node ringing to finalize the
+snubber, verifying the current-loop noise under synchronous sampling, and confirming shunt
+availability at BOM release.
+
+%=====================================================================
+\begin{thebibliography}{99}
+\setlength{\itemsep}{2pt}
+
+\bibitem{ipt015ds} Infineon Technologies, \emph{IPT015N10N5 --- OptiMOS\texttrademark\,5 Power Transistor, 100\,V}, Final Data Sheet, Rev.\,2.4, 2023. [Online]. Available: \url{https://www.infineon.com/assets/row/public/documents/24/49/infineon-ipt015n10n5-datasheet-en.pdf}
+
+\bibitem{ipt015part} Infineon Technologies, \emph{IPT015N10N5 product page (parametric summary)}. [Online]. Available: \url{https://www.infineon.com/part/IPT015N10N5}
+
+\bibitem{ucc27211} Texas Instruments, \emph{UCC27211A-Q1 Automotive 120-V, 3.7-A/4.5-A Half-Bridge Driver with 8-V UVLO}, Datasheet SLUSCG0C, Dec.\,2015 (rev.\,Sep.\,2025). [Online]. Available: \url{https://www.ti.com/lit/ds/symlink/ucc27211a-q1.pdf}
+
+\bibitem{ucc27211folder} Texas Instruments, \emph{UCC27211A-Q1 product folder}. [Online]. Available: \url{https://www.ti.com/product/UCC27211A-Q1}
+
+\bibitem{balogh} L.\,Balogh, \emph{Fundamentals of MOSFET and IGBT Gate Driver Circuits}, Texas Instruments Application Report SLUA618A, 2017 (rev.\,2018). [Online]. Available: \url{https://www.ti.com/lit/pdf/slua618}
+
+\bibitem{infineon_monolithic} Infineon Technologies, \emph{Using Monolithic High-Voltage Gate Drivers}, Application Note. [Online]. Available: \url{https://www.infineon.com/assets/row/public/documents/24/42/infineon-using-monolithic-high-voltage-gate-drivers-applicationnotes-en.pdf}
+
+\bibitem{ir_an978} International Rectifier (now Infineon Technologies), \emph{Application Note AN-978: HV Floating MOS-Gate Driver ICs}. [Online]. Available: \url{https://www.infineon.com/assets/row/public/documents/24/42/infineon-hv-floating-mos-gate-drivers-applicationnotes-en.pdf}
+
+\bibitem{ir_an1123} A.\,Merello, International Rectifier (now Infineon Technologies), \emph{Application Note AN-1123: Bootstrap Network Analysis --- Focusing on the Integrated Bootstrap Functionality}. [Online]. Available: \url{https://www.infineon.com/assets/row/public/documents/cross-divisions/42/infineon-bootstrap-network-analysis-applicationnotes-en.pdf}
+
+\bibitem{pmeg4030er} Nexperia, \emph{PMEG4030ER --- 40\,V, 3\,A low-$V_F$ Schottky barrier rectifier}, Data Sheet, 2023. [Online]. Available: \url{https://assets.nexperia.com/documents/data-sheet/PMEG4030ER.pdf}
+
+\bibitem{an90059} Nexperia, \emph{Power MOSFET Gate Driver Fundamentals}, Application Note AN90059, Rev.\,1, 2025. [Online]. Available: \url{https://assets.nexperia.com/documents/application-note/AN90059.pdf}
+
+\bibitem{toshiba_dvdt} Toshiba Electronic Devices \& Storage, \emph{Impacts of the dv/dt Rate on MOSFETs}, Application Note, 2018. [Online]. Available: \url{https://toshiba.semicon-storage.com/info/docget.jsp?did=59464}
+
+\bibitem{ti_foc} Texas Instruments, \emph{Sensored Field Oriented Control of 3-Phase Permanent Magnet Synchronous Motors}, Application Report SPRABZ0A, 2016 (rev.\,2021). [Online]. Available: \url{https://www.ti.com/lit/pdf/sprabz0}
+
+\bibitem{ti_svpwm} Z.\,Yu, \emph{Space-Vector PWM With TMS320C24x/F24x Using Hardware and Software Determined Switching Patterns}, Texas Instruments Application Report SPRA524, 1999. [Online]. Available: \url{https://www.ti.com/lit/pdf/spra524}
+
+\bibitem{stm32g473ds} STMicroelectronics, \emph{STM32G473xB/xC/xE Datasheet}, DS12712, Rev.\,5, 2023. [Online]. Available: \url{https://www.st.com/resource/en/datasheet/stm32g473rc.pdf}
+
+\bibitem{ina240ds} Texas Instruments, \emph{INA240 --4-V to 80-V, Bidirectional, Ultra-Precise Current-Sense Amplifier with Enhanced PWM Rejection}, Datasheet SBOS662C, 2016 (rev.\,2021). [Online]. Available: \url{https://www.ti.com/lit/gpn/INA240}
+
+\bibitem{tida00913} Texas Instruments, \emph{TIDA-00913: 48-V/10-A Three-Phase Inverter with In-Line Shunt-Based Phase Current Sensing Reference Design}. [Online]. Available: \url{https://www.ti.com/tool/TIDA-00913}
+
+\bibitem{ti_inline} Texas Instruments, \emph{Low-Drift, Precision, In-Line Motor Current Measurements with PWM Rejection} (INA240 application material). [Online]. Available: \url{https://www.ti.com/product/INA240}
+
+\bibitem{an5346} STMicroelectronics, \emph{AN5346: STM32G4 ADC Use Tips and Recommendations}, Rev.\,2. [Online]. Available: \url{https://www.st.com/resource/en/application_note/an5346-stm32g4-adc-use-tips-and-recommendations-stmicroelectronics.pdf}
+
+\bibitem{an5306} STMicroelectronics, \emph{AN5306: Operational Amplifier (OPAMP) Usage in STM32G4 Series}. [Online]. Available: \url{https://www.st.com/resource/en/application_note/an5306-operational-amplifier-opamp-usage-in-stm32g4-series-stmicroelectronics.pdf}
+
+\bibitem{an2834} STMicroelectronics, \emph{AN2834: How to Get the Best ADC Accuracy in STM32 Microcontrollers}, Rev.\,10. [Online]. Available: \url{https://www.st.com/resource/en/application_note/an2834-how-to-get-the-best-adc-accuracy-in-stm32-microcontrollers-stmicroelectronics.pdf}
+
+\bibitem{severns} R.\,Severns, \emph{Design of Snubbers for Power Circuits}, Cornell Dubilier Application Note. [Online]. Available: \url{https://www.cde.com/resources/technical-papers/design.pdf}
+
+\bibitem{lcsc} LCSC Electronics, component sourcing: INA240A2PWR (C129949), IPT015N10N5 (C108964). [Online]. Available: \url{https://www.lcsc.com/}
+
+\end{thebibliography}
+
+\end{document}

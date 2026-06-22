@@ -31,3 +31,5 @@ build/
 *.hex
 
 .history
+
+CLAUDE.md
