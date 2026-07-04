@@ -4,5 +4,12 @@
 	(generator_version "10.0")
 	(uuid "51808c6e-51b5-4989-aa80-2b846ed1c65f")
 	(paper "A4")
+	(title_block
+		(rev "1.0.0")
+		(company "Jovanovski Laboratory - JLab")
+		(comment 1 "Bvrny")
+		(comment 3 "Vector")
+		(comment 4 "Vortex")
+	)
 	(lib_symbols)
 )

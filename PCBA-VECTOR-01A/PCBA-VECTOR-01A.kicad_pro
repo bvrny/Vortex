@@ -240,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "1.0.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -708,6 +708,12 @@
       "/Project Architecture/Comm's/CAN-": [
         "120Ohm differential pair"
       ],
+      "/Project Architecture/Comm's/D+": [
+        "90Ohm differential pair"
+      ],
+      "/Project Architecture/Comm's/D-": [
+        "90Ohm differential pair"
+      ],
       "/Project Architecture/Comm's/RS485+": [
         "120Ohm differential pair"
       ],
@@ -718,6 +724,18 @@
         "90Ohm differential pair"
       ],
       "/Project Architecture/Comm's/USB_D-": [
+        "90Ohm differential pair"
+      ],
+      "/Project Architecture/Comm's/{USB}": [
+        "90Ohm differential pair"
+      ],
+      "/Project Architecture/MCU/D+": [
+        "90Ohm differential pair"
+      ],
+      "/Project Architecture/MCU/D-": [
+        "90Ohm differential pair"
+      ],
+      "/Project Architecture/MCU/{USB}": [
         "90Ohm differential pair"
       ]
     },
@@ -735,7 +753,7 @@
         "pattern": "+1.8V"
       },
       {
-        "netclass": "Power +24V",
+        "netclass": "Power +12V",
         "pattern": "+12V"
       },
       {
@@ -875,7 +893,37 @@
       "sort_asc": true,
       "sort_field": "Reference"
     },
-    "bus_aliases": {},
+    "bus_aliases": {
+      "": [],
+      "CAN": [
+        "FDCAN1_TXD",
+        "FDCAN1_RXD"
+      ],
+      "HallEffect": [
+        "H_{U}",
+        "H_{V}",
+        "H_{W}"
+      ],
+      "RS485": [
+        "UART4_RXD",
+        "UART4_TXD",
+        "UART4_DE"
+      ],
+      "SPI": [
+        "SPI1_SCK",
+        "SPI1_MOSI",
+        "SPI1_MISO",
+        "SPI1_NSS"
+      ],
+      "UART": [
+        "USART1_TXD",
+        "USART1_RXD"
+      ],
+      "USB": [
+        "D+",
+        "D-"
+      ]
+    },
     "connection_grid_size": 50.0,
     "drawing": {
       "dashed_lines_dash_length_ratio": 12.0,
@@ -883,7 +931,7 @@
       "default_line_thickness": 6.0,
       "default_text_size": 50.0,
       "field_names": [],
-      "hop_over_size_choice": 0,
+      "hop_over_size_choice": 3,
       "intersheets_ref_own_page": false,
       "intersheets_ref_prefix": "",
       "intersheets_ref_short": false,
@@ -916,7 +964,7 @@
         "uuid": "27d049f2-0962-4d9e-88e1-d5cca5250f12"
       }
     ],
-    "used_designators": "",
+    "used_designators": "U15,F1,D13-15,D23,C97,C117,C132,C137-142,C144-148,R20,R49,R104,#PWR3-4,#PWR43,#PWR78-81,#PWR97,#PWR100-101,#PWR107-109,#PWR111,#PWR129,#PWR170-172,#PWR175,#PWR178-179,#PWR184,J4-5,J7-11,J13-14",
     "variants": [
       {
         "name": "No DNP components"
@@ -937,16 +985,24 @@
       "Project Architecture"
     ],
     [
-      "94a9512e-43db-46c1-ac13-e6cd3054aee1",
-      "MCU"
+      "cfbaba43-ffb3-4582-b121-5b52bb53f20a",
+      "Power Input"
     ],
     [
       "642ef5c7-b62f-459c-a626-822a0bd0e6ba",
       "Power Supply"
     ],
     [
+      "94a9512e-43db-46c1-ac13-e6cd3054aee1",
+      "MCU"
+    ],
+    [
       "9e54abbd-664b-4fc3-9d4b-0a895e48b852",
       "Comm's"
+    ],
+    [
+      "1576bbd1-16f2-4bd2-a474-cd01765725d2",
+      "Motor Output"
     ],
     [
       "7334f2a4-a630-4075-91c9-034ca44ce391",
