@@ -899,7 +899,7 @@
         "uuid": "27d049f2-0962-4d9e-88e1-d5cca5250f12"
       }
     ],
-    "used_designators": "J1-8,R88-92,#PWR84-97,Q17,C4,C7,C11,C15,C19,C23,C26,C98-106,C120-122",
+    "used_designators": "TH2-3,J1-10,R24,R26-72,R74,R80-95,#PWR29-30,#PWR34-77,#PWR84-113,U5-10,Q6-13,Q16-20,D6-13,C4,C7,C11,C15,C19,C23,C26,C42,C44,C46,C49,C51-82,C96-142",
     "variants": [
       {
         "name": "No DNP components"
@@ -918,10 +918,6 @@
     [
       "8be822f4-70dc-41bd-a457-afdb13f44dff",
       "Project Architecture"
-    ],
-    [
-      "7353cc83-07e4-4a85-8f8d-3d36127a9e81",
-      "Power Input"
     ],
     [
       "caf97dc2-dff1-4b91-982f-70d9a2001652",

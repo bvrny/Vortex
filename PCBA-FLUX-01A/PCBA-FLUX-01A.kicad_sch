@@ -8,12 +8,11 @@
 		(rev "1.0.0")
 		(company "Jovanovski Laboratory - JLAB")
 		(comment 1 "Bvrny")
-		(comment 2 "Nikola Jovanovski")
 		(comment 3 "Flux")
 		(comment 4 "Vortex")
 	)
 	(lib_symbols)
-	(text "Phase V\n"
+	(text "Phase W"
 		(exclude_from_sim no)
 		(at 45.72 116.967 0)
 		(effects
@@ -253,7 +252,7 @@
 		)
 		(uuid "1f53553e-5ecf-4949-8340-679034c3d1aa")
 	)
-	(text "Power Input"
+	(text "Phase U\n"
 		(exclude_from_sim no)
 		(at 45.72 101.727 0)
 		(effects
@@ -1237,7 +1236,7 @@
 		)
 		(uuid "bf0bf5a8-4643-4bae-ad4c-66bb17bbe96d")
 	)
-	(text "Phase U"
+	(text "Phase V"
 		(exclude_from_sim no)
 		(at 45.72 109.347 0)
 		(effects
@@ -1362,7 +1361,7 @@
 		)
 		(uuid "e77c5399-31f7-407e-ae2c-a5e2cb55f789")
 	)
-	(text "Phase W\n"
+	(text "..............."
 		(exclude_from_sim no)
 		(at 45.72 124.587 0)
 		(effects
