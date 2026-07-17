@@ -27,6 +27,8 @@ from vortex_app.rings import TelemetryStore
 from vortex_app.widgets.dashboard import StatTiles
 from vortex_app.widgets.params import ParamPanel
 from vortex_app.widgets.plots import ChannelPanel, LivePlots
+from vortex_app.widgets.scope import ScopePanel
+from vortex_app.widgets.tuning import BandwidthKnob, MotorIdWizard
 
 POLL_MS = 30
 PLOT_POINTS = 2000
@@ -66,7 +68,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self._build_status_strip(), 0)
         self.tabs = QTabWidget(objectName="main_tabs")
         self.tabs.addTab(self._build_dashboard_tab(), "Dashboard")
-        self.tabs.addTab(QWidget(), "Tuning")        # populated in Phase 4
+        self.tabs.addTab(self._build_tuning_tab(), "Tuning")
         self.tabs.addTab(self._build_params_tab(), "Parameters")
         self.tabs.addTab(QWidget(), "Console")       # populated in Phase 5
         layout.addWidget(self.tabs, 1)
@@ -94,11 +96,9 @@ class MainWindow(QMainWindow):
         self.sp_spin = QDoubleSpinBox(minimum=-30000, maximum=30000, decimals=2)
         self.apply_btn = QPushButton("Set")
         self.apply_btn.clicked.connect(self._on_setpoint)
-        self.motorid_btn = QPushButton("Identify motor")
-        self.motorid_btn.clicked.connect(lambda: self._simple_cmd(vp.Cmd.MOTOR_ID_START))
         for w in (self.port_combo, self.port_edit, self.connect_btn, self.arm_btn,
                   self.disarm_btn, self.stop_btn, self.mode_combo, self.sp_spin,
-                  self.apply_btn, self.motorid_btn):
+                  self.apply_btn):
             tb.addWidget(w)
 
     def _build_status_strip(self):
@@ -143,6 +143,26 @@ class MainWindow(QMainWindow):
         layout.addLayout(left, 0)
         layout.addWidget(self.plots, 1)
         return tab
+
+    def _build_tuning_tab(self):
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        top = QHBoxLayout()
+        self.bw_knob = BandwidthKnob(lambda: self.link)
+        self.motorid_wiz_btn = QPushButton("Motor identification…")
+        self.motorid_wiz_btn.clicked.connect(self._on_motor_id_wizard)
+        top.addWidget(self.bw_knob, 1)
+        top.addWidget(self.motorid_wiz_btn, 0, Qt.AlignTop)
+        layout.addLayout(top, 0)
+        self.scope_panel = ScopePanel(lambda: self.link)
+        layout.addWidget(self.scope_panel, 1)
+        self.motorid_wizard = None
+        return tab
+
+    def _on_motor_id_wizard(self):
+        self.motorid_wizard = MotorIdWizard(
+            self, lambda: self._simple_cmd(vp.Cmd.MOTOR_ID_START))
+        self.motorid_wizard.show()
 
     def _on_mask_changed(self, mask):
         self.plots.rebuild(mask)
@@ -293,6 +313,8 @@ class MainWindow(QMainWindow):
         self.tiles.update_from(self.store)
 
     def _on_motor_id(self, payload):
+        if self.motorid_wizard is not None:
+            self.motorid_wizard.handle_progress(payload)
         stage, pct, r, ld, lq, flux = struct.unpack("<BBffff", payload)
         stage = vp.MotorIdStage(stage)
         self.statusBar().showMessage(f"Motor ID: {stage.name} {pct}%", 2000)

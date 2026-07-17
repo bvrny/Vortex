@@ -127,5 +127,35 @@ class DeviceLink:
     def setpoint(self, mode: vp.SetpointMode, value: float) -> vp.Status:
         return self.request(vp.Cmd.SETPOINT, struct.pack("<Bf", int(mode), value))[0]
 
+    def scope_config(self, mask: int, decimation: int, pretrigger: int = 0,
+                     trig_channel: int = 0,
+                     trig_edge: vp.TrigEdge = vp.TrigEdge.RISING,
+                     trig_level: int = 0) -> vp.Status:
+        payload = struct.pack("<IHHBBh", mask, decimation, pretrigger,
+                              trig_channel, int(trig_edge), trig_level)
+        return self.request(vp.Cmd.SCOPE_CONFIG, payload)[0]
+
+    def scope_arm(self) -> vp.Status:
+        return self.request(vp.Cmd.SCOPE_ARM)[0]
+
+    def scope_read(self):
+        """(status, capture blob) — loops SCOPE_READ chunks until complete.
+
+        The blob is telemetry-batch formatted (vp.parse_telemetry decodes it).
+        """
+        blob = bytearray()
+        offset = 0
+        while True:
+            status, rest = self.request(vp.Cmd.SCOPE_READ,
+                                        struct.pack("<I", offset))
+            if status != vp.Status.OK:
+                return status, None
+            total, off = struct.unpack_from("<II", rest, 0)
+            data = rest[8:]
+            blob += data
+            offset = off + len(data)
+            if offset >= total:
+                return vp.Status.OK, bytes(blob)
+
     def close(self) -> None:
         self.transport.close()
