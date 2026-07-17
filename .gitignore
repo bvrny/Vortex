@@ -33,3 +33,9 @@ build/
 .history
 
 CLAUDE.md
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/

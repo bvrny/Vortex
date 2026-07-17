@@ -1,0 +1,195 @@
+# =============================================================================
+# Vortex USB protocol — SINGLE SOURCE OF TRUTH
+#
+# Everything the firmware (FW-VECTOR-01B) and the desktop app (APP-VORTEX)
+# know about the wire protocol, parameters, and telemetry channels is
+# generated from THIS file by codegen/generate.py. Never hand-edit the
+# generated artifacts (generated/vortex_protocol.h, generated/vortex_protocol.py).
+#
+# Changing any numeric ID, frame field, or param wire type is a BREAKING
+# protocol change: bump meta.version_major.
+# =============================================================================
+
+meta:
+  version_major: 1
+  version_minor: 0
+  sync: 0xA5                 # frame start byte (pre-COBS; redundant on wire, kept as sanity check)
+  max_payload: 512           # bytes; bounds every frame, sized for scope-read blocks
+  endianness: little         # ALL multi-byte fields are little-endian
+  cobs: true                 # wire = COBS(frame) + 0x00 delimiter; CRC computed pre-COBS
+  usb_vid: 0x0483            # ST default CDC VID (placeholder until a dedicated PID exists)
+  usb_pid: 0x5740            # ST default CDC PID
+  heartbeat_timeout_ms: 200  # SAFETY-CRITICAL: firmware disarms + kills PWM if no
+                             # HEARTBEAT within this window while ARMED/RUNNING
+  heartbeat_period_ms: 50    # recommended host send period (4x margin)
+
+# Fixed hardware facts the protocol math depends on. These mirror the design
+# spec (DOCS-VORTEX-01A/VortexExplanation.md) and the Flux/Vector schematics.
+hardware:
+  mcu: STM32G473VET6
+  fsw_hz: 40000              # TIM1 center-aligned PWM, control ISR rate
+  vref_v: 3.3                # ADC/DAC/comparator reference
+  dac_fullscale: 4096        # V_DAC = VREF * code / 4096 (RM0440)
+  # Current sense: 0.1 mOhm shunt (ASR-S-7-0.1F) x INA240A2 gain 50 = 5 mV/A
+  current_sense_v_per_a: 0.005
+  ina240_vref_v: 1.65        # bidirectional midpoint reference
+  # DC bus sense: 100k / 4.7k divider (70 V -> ~3.1 V), spec section 4
+  vbus_divider_k: 0.0448901623686723   # 4.7 / 104.7
+  vbus_operating_max_v: 60.0
+  vbus_survive_max_v: 70.0
+  brake_target_v: 63.0       # TIM15 brake chopper PI regulation target
+  brake_backstop_v: 66.0     # hardware comparator force-on backstop (approx)
+
+status:
+  OK: 0
+  NACK_BAD_CRC: 1
+  NACK_BAD_LEN: 2
+  NACK_UNKNOWN_CMD: 3
+  NACK_BAD_PARAM: 4
+  NACK_BAD_STATE: 5
+  NACK_OUT_OF_BOUNDS: 6
+  BUSY: 7
+
+flags:
+  RESPONSE: 0x01             # set on device->host replies; CMD_ID and SEQ echoed
+
+# Enums that travel as u8 inside command payloads (see PROTOCOL.md).
+enums:
+  DeviceState:               # firmware fault state machine, reported in HEARTBEAT replies
+    INIT: 0
+    PRECHARGE: 1
+    SELFTEST: 2
+    STANDBY: 3
+    ARMED: 4
+    RUNNING: 5
+    FAULT: 6
+  SetpointMode:
+    TORQUE: 0                # SETPOINT value = iq amps
+    SPEED: 1                 # SETPOINT value = rpm
+  MotorIdStage:
+    IDLE: 0
+    RESISTANCE: 1
+    INDUCTANCE: 2
+    FLUX: 3
+    DONE: 4
+    FAILED: 5
+  TrigEdge:
+    RISING: 0
+    FALLING: 1
+
+# Fault BIT POSITIONS in the u32 fault mask (FAULT_READ / HEARTBEAT responses).
+faults:
+  OVERCURRENT: 0
+  OVERVOLTAGE: 1
+  UNDERVOLTAGE: 2
+  OVERTEMP_INV: 3
+  OVERTEMP_MOTOR: 4
+  HALL_FAULT: 5
+  PHASE_LOSS: 6
+  HEARTBEAT_LOSS: 7          # link watchdog tripped while ARMED/RUNNING
+  GATE_DRIVER: 8
+  SELFTEST_FAIL: 9
+  OVERSPEED: 10
+  BRAKE_BACKSTOP: 11         # hardware ~66 V comparator forced the chopper on
+
+commands:
+  HELLO:             0x01
+  DEVICE_INFO:       0x02
+  PARAM_LIST:        0x10
+  PARAM_READ:        0x11
+  PARAM_WRITE:       0x12
+  PARAM_SAVE:        0x13
+  PARAM_LOAD:        0x14
+  PARAM_DEFAULT:     0x15
+  TELEMETRY_START:   0x20
+  TELEMETRY_STOP:    0x21
+  TELEMETRY_DATA:    0x22    # device->host, unsolicited stream
+  MOTOR_ID_START:    0x30
+  MOTOR_ID_ABORT:    0x31
+  MOTOR_ID_PROGRESS: 0x32    # device->host: progress %, stage, results
+  PROTECTION_SET:    0x40
+  FAULT_READ:        0x50
+  FAULT_CLEAR:       0x51
+  ARM:               0x60
+  DISARM:            0x61
+  STOP:              0x62    # highest priority, always honored
+  SETPOINT:          0x63
+  SCOPE_CONFIG:      0x70
+  SCOPE_ARM:         0x71
+  SCOPE_READ:        0x72
+  REBOOT:            0x7D
+  ENTER_DFU:         0x7E    # RAM-magic-word bootloader jump
+  HEARTBEAT:         0x7F
+
+# Param wire types. ENUM travels as u8.
+param_types: [U8, U16, I16, U32, I32, F32, ENUM]
+
+# storage: NV = persisted by PARAM_SAVE to flash; RAM = never persisted.
+# access: RW = host-writable; RO = read-only (measurement results, etc.).
+# Bounds are enforced by FIRMWARE on every PARAM_WRITE (NACK_OUT_OF_BOUNDS).
+params:
+  - {id: 0x0001, name: motor.pole_pairs,      type: U8,  unit: "",      min: 1,      max: 64,      default: 7,        storage: NV, access: RW}
+  - {id: 0x0002, name: motor.r_phase,         type: F32, unit: ohm,     min: 0.0005, max: 2.0,     default: 0.02,     storage: NV, access: RW}
+  - {id: 0x0003, name: motor.l_d,             type: F32, unit: H,       min: 1.0e-6, max: 0.01,    default: 2.0e-5,   storage: NV, access: RW}
+  - {id: 0x0004, name: motor.l_q,             type: F32, unit: H,       min: 1.0e-6, max: 0.01,    default: 2.0e-5,   storage: NV, access: RW}
+  - {id: 0x0005, name: motor.flux_lambda,     type: F32, unit: Wb,      min: 1.0e-4, max: 1.0,     default: 0.005,    storage: NV, access: RW}
+
+  # Current-loop PI. Defaults derived from motor defaults at f_bw = fsw/15:
+  # Kp = L*2*pi*f_bw, Ki = R*2*pi*f_bw, Tf = 1/(2*pi*5*f_bw).
+  - {id: 0x0101, name: iloop.kp,              type: F32, unit: V/A,     min: 0.0,    max: 100.0,   default: 0.3351,   storage: NV, access: RW}
+  - {id: 0x0102, name: iloop.ki,              type: F32, unit: V/(A.s), min: 0.0,    max: 1.0e+6,   default: 335.1,    storage: NV, access: RW}
+  - {id: 0x0103, name: iloop.bandwidth_hz,    type: F32, unit: Hz,      min: 2000.0, max: 4000.0,  default: 2666.667, storage: NV, access: RW}
+  - {id: 0x0104, name: iloop.lpf_tf,          type: F32, unit: s,       min: 1.0e-6, max: 0.01,    default: 1.194e-5, storage: NV, access: RW}
+
+  # SAFETY-CRITICAL bounds:
+  # overcurrent_a max 175 A = peak phase design target (spec section 0).
+  # overvoltage_v window (63.5 .. 65.5 V) sits strictly above the 63 V brake
+  # target (so the chopper regulates before the comparator trips) and strictly
+  # below the ~66 V hardware force-on backstop. Firmware NACKs anything else.
+  - {id: 0x0201, name: prot.overcurrent_a,    type: F32, unit: A,       min: 10.0,   max: 175.0,   default: 150.0,    storage: NV, access: RW}
+  - {id: 0x0202, name: prot.overvoltage_v,    type: F32, unit: V,       min: 63.5,   max: 65.5,    default: 65.0,     storage: NV, access: RW}
+
+  - {id: 0x0301, name: sensor.mode,           type: ENUM, unit: "",     enum: [hall, encoder, sensorless], default: 0, storage: NV, access: RW}
+  - {id: 0x0302, name: sensor.hall_offset_deg, type: F32, unit: deg,    min: -180.0, max: 180.0,   default: 0.0,      storage: NV, access: RW}
+  - {id: 0x0303, name: sensor.hall_sequence,  type: U8,  unit: "",      min: 0,      max: 5,       default: 0,        storage: NV, access: RW}
+  - {id: 0x0311, name: sensor.enc_cpr,        type: I32, unit: counts,  min: 1,      max: 1000000, default: 4096,     storage: NV, access: RW}
+  - {id: 0x0312, name: sensor.enc_offset_deg, type: F32, unit: deg,     min: -180.0, max: 180.0,   default: 0.0,      storage: NV, access: RW}
+  - {id: 0x0313, name: sensor.enc_direction,  type: U8,  unit: "",      min: 0,      max: 1,       default: 0,        storage: NV, access: RW}
+  - {id: 0x0321, name: sensor.obs_gain,       type: F32, unit: "",      min: 0.0,    max: 1.0e+6,   default: 100.0,    storage: NV, access: RW}
+
+  - {id: 0x0401, name: limits.i_max_a,        type: F32, unit: A,       min: 1.0,    max: 175.0,   default: 120.0,    storage: NV, access: RW}
+  - {id: 0x0402, name: limits.vbus_min_v,     type: F32, unit: V,       min: 15.0,   max: 60.0,    default: 20.0,     storage: NV, access: RW}
+  - {id: 0x0403, name: limits.vbus_max_v,     type: F32, unit: V,       min: 20.0,   max: 60.0,    default: 60.0,     storage: NV, access: RW}
+  - {id: 0x0404, name: limits.temp_inv_max_c, type: F32, unit: degC,    min: 40.0,   max: 110.0,   default: 90.0,     storage: NV, access: RW}
+  - {id: 0x0405, name: limits.temp_motor_max_c, type: F32, unit: degC,  min: 40.0,   max: 180.0,   default: 120.0,    storage: NV, access: RW}
+  - {id: 0x0406, name: limits.speed_max_rpm,  type: F32, unit: rpm,     min: 100.0,  max: 30000.0, default: 5000.0,   storage: NV, access: RW}
+
+  - {id: 0x0501, name: telem.default_mask,    type: U32, unit: "",      min: 0,      max: 0xFFFFFFFF, default: 0x1C7, storage: NV, access: RW}
+  - {id: 0x0502, name: telem.default_decimation, type: U16, unit: "",   min: 1,      max: 40000,   default: 8,        storage: NV, access: RW}
+
+# Telemetry channels: int16 on the wire, physical = raw * scale.
+# bit = position in the u32 channel_mask of TELEMETRY_START / TELEMETRY_DATA.
+# Scales chosen so int16 full scale covers the hardware envelope:
+#   currents 0.01 A/LSB -> +/-327 A (>175 A peak target)
+#   voltages 0.0025 V/LSB -> +/-81.9 V (>70 V survival rating)
+#   angle 2*pi/65536 rad/LSB (wraps naturally with int16 overflow)
+telemetry:
+  channels:
+    - {bit: 0,  name: ia,          scale: 0.01,          unit: A}
+    - {bit: 1,  name: ib,          scale: 0.01,          unit: A}
+    - {bit: 2,  name: ic,          scale: 0.01,          unit: A}
+    - {bit: 3,  name: va,          scale: 0.0025,        unit: V}
+    - {bit: 4,  name: vb,          scale: 0.0025,        unit: V}
+    - {bit: 5,  name: vc,          scale: 0.0025,        unit: V}
+    - {bit: 6,  name: vbus,        scale: 0.0025,        unit: V}
+    - {bit: 7,  name: id,          scale: 0.01,          unit: A}
+    - {bit: 8,  name: iq,          scale: 0.01,          unit: A}
+    - {bit: 9,  name: vd,          scale: 0.0025,        unit: V}
+    - {bit: 10, name: vq,          scale: 0.0025,        unit: V}
+    - {bit: 11, name: angle_elec,  scale: 9.587379924285257e-5, unit: rad}   # 2*pi/65536
+    - {bit: 12, name: speed,       scale: 1.0,           unit: rpm}
+    - {bit: 13, name: iq_setpoint, scale: 0.01,          unit: A}
+    - {bit: 14, name: temp_inv1,   scale: 0.01,          unit: degC}
+    - {bit: 15, name: temp_inv2,   scale: 0.01,          unit: degC}
+    - {bit: 16, name: temp_inv3,   scale: 0.01,          unit: degC}
+    - {bit: 17, name: temp_motor,  scale: 0.01,          unit: degC}
