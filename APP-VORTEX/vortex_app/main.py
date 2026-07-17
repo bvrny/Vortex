@@ -10,20 +10,23 @@ import struct
 import time
 from pathlib import Path
 
-import pyqtgraph as pg
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox,
-                               QHBoxLayout, QLabel, QMainWindow, QMessageBox,
-                               QPushButton, QTabWidget, QVBoxLayout, QWidget)
+                               QFileDialog, QHBoxLayout, QLabel, QMainWindow,
+                               QMessageBox, QPushButton, QTabWidget,
+                               QVBoxLayout, QWidget)
 
 import vortex_protocol as vp
 from simulator import SimDevice
 from vortex_app import theme
+from vortex_app.csvlog import CsvLogger
 from vortex_app.link import (DeviceLink, LinkTimeout, SerialTransport,
                              SimTransport, list_serial_ports)
 from vortex_app.rings import TelemetryStore
+from vortex_app.widgets.dashboard import StatTiles
 from vortex_app.widgets.params import ParamPanel
+from vortex_app.widgets.plots import ChannelPanel, LivePlots
 
 POLL_MS = 30
 PLOT_POINTS = 2000
@@ -31,7 +34,6 @@ DEFAULT_MASK = 0x1C7 | (1 << 12)  # ia ib ic vbus id iq + speed
 DEFAULT_DECIMATION = 8
 SIM_PARAM_FILE = Path.home() / ".vortex_sim_params.json"
 
-CURRENT_CHANNELS = ("ia", "ib", "ic")
 STATE_COLORS = {
     vp.DeviceState.STANDBY: "#808080",
     vp.DeviceState.ARMED: "#c8a000",
@@ -116,7 +118,55 @@ class MainWindow(QMainWindow):
         return strip
 
     def _build_dashboard_tab(self):
-        return self._build_plots()
+        tab = QWidget()
+        layout = QHBoxLayout(tab)
+        left = QVBoxLayout()
+        self.tiles = StatTiles()
+        self.channel_panel = ChannelPanel()
+        self.channel_panel.set_mask(DEFAULT_MASK)
+        self.channel_panel.mask_changed.connect(self._on_mask_changed)
+        row = QHBoxLayout()
+        self.pause_btn = QPushButton("Pause", checkable=True)
+        self.pause_btn.toggled.connect(
+            lambda on: setattr(self.plots, "paused", on))
+        self.record_btn = QPushButton("Record CSV", checkable=True)
+        self.record_btn.toggled.connect(self._on_record_toggled)
+        row.addWidget(self.pause_btn)
+        row.addWidget(self.record_btn)
+        left.addWidget(self.tiles, 0)
+        left.addWidget(self.channel_panel, 1)
+        left.addLayout(row)
+
+        self.plots = LivePlots(PLOT_POINTS)
+        self.plots.rebuild(DEFAULT_MASK)
+        self.csv_logger = None
+        layout.addLayout(left, 0)
+        layout.addWidget(self.plots, 1)
+        return tab
+
+    def _on_mask_changed(self, mask):
+        self.plots.rebuild(mask)
+        if self.link is None:
+            return
+        try:
+            self.link.request(vp.Cmd.TELEMETRY_STOP)
+            if mask:
+                self.link.request(vp.Cmd.TELEMETRY_START,
+                                  struct.pack("<IH", mask, DEFAULT_DECIMATION))
+        except LinkTimeout as e:
+            self.statusBar().showMessage(str(e), 4000)
+
+    def _on_record_toggled(self, on):
+        if on:
+            path, _ = QFileDialog.getSaveFileName(
+                self, "Record telemetry CSV", "vortex_log.csv", "CSV (*.csv)")
+            if not path:
+                self.record_btn.setChecked(False)
+                return
+            self.csv_logger = CsvLogger(path, self.channel_panel.mask())
+        elif self.csv_logger is not None:
+            self.csv_logger.close()
+            self.csv_logger = None
 
     def _build_params_tab(self):
         tab = QWidget()
@@ -150,23 +200,6 @@ class MainWindow(QMainWindow):
             f"background:{theme.WARN};color:#10131a;font-weight:bold"
             if dirty else "")
 
-    def _build_plots(self):
-        glw = pg.GraphicsLayoutWidget()
-        self.curves = {}
-        p1 = glw.addPlot(title="Phase currents [A]")
-        p1.addLegend()
-        for name in CURRENT_CHANNELS:
-            self.curves[name] = p1.plot(pen=theme.PLOT_COLORS[name], name=name)
-        glw.nextRow()
-        p2 = glw.addPlot(title="Bus voltage [V]")
-        self.curves["vbus"] = p2.plot(pen=theme.PLOT_COLORS["vbus"])
-        glw.nextRow()
-        p3 = glw.addPlot(title="Speed [rpm]")
-        self.curves["speed"] = p3.plot(pen=theme.PLOT_COLORS["speed"])
-        for p in (p2, p3):
-            p.setXLink(p1)
-        return glw
-
     # ------------------------------------------------------------ actions
 
     def _on_connect(self):
@@ -182,8 +215,9 @@ class MainWindow(QMainWindow):
             status, _ = link.request(vp.Cmd.HELLO)
             if status != vp.Status.OK:
                 raise LinkTimeout(f"HELLO: {status.name}")
+            mask = self.channel_panel.mask() or DEFAULT_MASK
             link.request(vp.Cmd.TELEMETRY_START,
-                         struct.pack("<IH", DEFAULT_MASK, DEFAULT_DECIMATION))
+                         struct.pack("<IH", mask, DEFAULT_DECIMATION))
         except (LinkTimeout, OSError) as e:
             QMessageBox.critical(self, "Connect failed", str(e))
             return
@@ -249,13 +283,14 @@ class MainWindow(QMainWindow):
         self._last_tick = now
         for f in self.link.poll():
             if f.cmd == vp.Cmd.TELEMETRY_DATA:
-                self.store.add_batch(vp.parse_telemetry(f.payload))
+                batch = vp.parse_telemetry(f.payload)
+                self.store.add_batch(batch)
+                if self.csv_logger is not None:
+                    self.csv_logger.add_batch(batch)
             elif f.cmd == vp.Cmd.MOTOR_ID_PROGRESS:
                 self._on_motor_id(f.payload)
-        for name, curve in self.curves.items():
-            t, v = self.store.window(name, PLOT_POINTS)
-            if t.size:
-                curve.setData(t, v)
+        self.plots.update_from(self.store)
+        self.tiles.update_from(self.store)
 
     def _on_motor_id(self, payload):
         stage, pct, r, ld, lq, flux = struct.unpack("<BBffff", payload)
