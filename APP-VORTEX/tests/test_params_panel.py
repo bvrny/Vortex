@@ -97,6 +97,32 @@ def test_write_updates_device_and_marks_state(panel):
     assert not panel.save_dirty
 
 
+def test_editors_always_open_for_rw_params(panel):
+    # spec change (user, 2026-07-17): no double-click — every RW param shows
+    # its editor permanently (spin arrows visible, single click to focus)
+    for name in ("motor.pole_pairs", "motor.r_phase", "sensor.mode",
+                 "telem.default_mask"):
+        item = _item(panel, name)
+        assert panel.tree.isPersistentEditorOpen(item, 1), name
+
+
+def test_unchanged_commit_does_not_rewrite(panel):
+    writes = []
+    original = panel.link().write_param
+    panel.link().write_param = lambda n, v: (writes.append(n),
+                                             original(n, v))[1]
+    delegate = panel.tree.itemDelegateForColumn(1)
+    item = _item(panel, "motor.pole_pairs")
+    index = panel.tree.indexFromItem(item, 1)
+    editor = delegate.createEditor(panel.tree, None, index)
+    delegate.setEditorData(editor, index)
+    delegate.setModelData(editor, None, index)     # same value: no write
+    assert writes == []
+    editor.setValue(9)
+    delegate.setModelData(editor, None, index)
+    assert writes == ["motor.pole_pairs"]
+
+
 def test_filter_hides_non_matching(panel):
     panel.set_filter("kp")
     assert not _item(panel, "iloop.kp").isHidden()
