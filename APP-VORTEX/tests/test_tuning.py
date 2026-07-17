@@ -88,6 +88,30 @@ def test_run_step_capture_returns_batch(link):
     assert link.transport.dev._setpoint == pytest.approx(5.0)
 
 
+def test_scope_panel_capture_populates_plot(qapp, link):
+    from vortex_app.widgets.scope import ScopePanel
+    panel = ScopePanel(lambda: link)
+    assert panel.capture(step=False)
+    assert panel.last_batch is not None
+    assert len(panel.last_batch.samples) == 128
+    assert len(panel.plot.listDataItems()) == len(
+        vp.active_channels(panel.last_batch.channel_mask))
+    # step capture drives the setpoint too
+    link.request(vp.Cmd.ARM)
+    assert panel.capture(step=True)
+    assert link.transport.dev._setpoint == pytest.approx(panel.amp_spin.value())
+
+
+def test_motor_id_wizard_shows_results(qapp, link):
+    from vortex_app.widgets.tuning import MotorIdWizard
+    wiz = MotorIdWizard(None, lambda: None)
+    done = struct.pack("<BBffff", int(vp.MotorIdStage.DONE), 100,
+                       0.0187, 1.55e-5, 1.62e-5, 0.0048)
+    wiz.handle_progress(done)
+    assert wiz.progress.value() == 100
+    assert "0.0187" in wiz.result_label.text()
+
+
 def test_motor_id_monitor_tracks_progress_frames():
     mon = MotorIdMonitor()
     running = struct.pack("<BBffff", int(vp.MotorIdStage.RESISTANCE), 33,
