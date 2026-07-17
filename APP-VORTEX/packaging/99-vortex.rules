@@ -1,0 +1,4 @@
+# Vortex motor driver — unprivileged USB CDC access.
+# Install: sudo cp 99-vortex.rules /etc/udev/rules.d/ && sudo udevadm control --reload
+# VID/PID from PROTO-VORTEX-01A/protocol.yaml (STM32 CDC).
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0666", TAG+="uaccess"
