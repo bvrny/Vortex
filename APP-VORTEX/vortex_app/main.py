@@ -14,10 +14,8 @@ import pyqtgraph as pg
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox,
-                               QHBoxLayout, QInputDialog, QLabel, QMainWindow,
-                               QMessageBox, QPushButton, QTabWidget,
-                               QTreeWidget, QTreeWidgetItem, QVBoxLayout,
-                               QWidget)
+                               QHBoxLayout, QLabel, QMainWindow, QMessageBox,
+                               QPushButton, QTabWidget, QVBoxLayout, QWidget)
 
 import vortex_protocol as vp
 from simulator import SimDevice
@@ -25,6 +23,7 @@ from vortex_app import theme
 from vortex_app.link import (DeviceLink, LinkTimeout, SerialTransport,
                              SimTransport, list_serial_ports)
 from vortex_app.rings import TelemetryStore
+from vortex_app.widgets.params import ParamPanel
 
 POLL_MS = 30
 PLOT_POINTS = 2000
@@ -122,22 +121,34 @@ class MainWindow(QMainWindow):
     def _build_params_tab(self):
         tab = QWidget()
         panel = QVBoxLayout(tab)
-        self.param_tree = QTreeWidget()
-        self.param_tree.setHeaderLabels(["Parameter", "Value", "Unit"])
-        self.param_tree.setColumnWidth(0, 200)
-        self.param_tree.itemDoubleClicked.connect(self._on_param_edit)
-        panel.addWidget(self.param_tree, 1)
+        self.params_panel = ParamPanel(lambda: self.link)
+        self.params_panel.status_message.connect(
+            lambda msg: self.statusBar().showMessage(msg, 4000))
+        self.param_tree = self.params_panel.tree      # smoke-test-pinned alias
+        panel.addWidget(self.params_panel, 1)
 
         row = QHBoxLayout()
-        for label, cmd in (("Save to flash", vp.Cmd.PARAM_SAVE),
-                           ("Load", vp.Cmd.PARAM_LOAD),
+        self.save_btn = QPushButton("Save to flash")
+        self.save_btn.clicked.connect(self._on_save_to_flash)
+        row.addWidget(self.save_btn)
+        for label, cmd in (("Load", vp.Cmd.PARAM_LOAD),
                            ("Defaults", vp.Cmd.PARAM_DEFAULT)):
             b = QPushButton(label)
             b.clicked.connect(lambda _=False, c=cmd: (self._simple_cmd(c),
                                                       self._refresh_params()))
             row.addWidget(b)
+        self.params_panel.save_dirty_changed.connect(self._on_save_dirty)
         panel.addLayout(row)
         return tab
+
+    def _on_save_to_flash(self):
+        self._simple_cmd(vp.Cmd.PARAM_SAVE)
+        self.params_panel.mark_saved()
+
+    def _on_save_dirty(self, dirty: bool):
+        self.save_btn.setStyleSheet(
+            f"background:{theme.WARN};color:#10131a;font-weight:bold"
+            if dirty else "")
 
     def _build_plots(self):
         glw = pg.GraphicsLayoutWidget()
@@ -225,55 +236,7 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------- params
 
     def _refresh_params(self):
-        if self.link is None:
-            return
-        self.param_tree.clear()
-        groups: dict[str, QTreeWidgetItem] = {}
-        for meta in sorted(vp.PARAMS.values(), key=lambda m: m.id):
-            g = groups.get(meta.group)
-            if g is None:
-                g = groups[meta.group] = QTreeWidgetItem(self.param_tree, [meta.group])
-                g.setExpanded(True)
-            try:
-                value = self.link.read_param(meta.name)
-            except LinkTimeout:
-                value = "?"
-            if meta.enum_values is not None and value != "?":
-                shown = meta.enum_values[int(value)]
-            else:
-                shown = f"{value:.6g}" if isinstance(value, float) else str(value)
-            item = QTreeWidgetItem(g, [meta.name.split(".", 1)[1], shown, meta.unit])
-            item.setData(0, Qt.UserRole, meta.name)
-
-    def _on_param_edit(self, item, _col):
-        name = item.data(0, Qt.UserRole)
-        if self.link is None or name is None:
-            return
-        meta = vp.PARAM_BY_NAME[name]
-        try:
-            current = self.link.read_param(name)
-            if meta.enum_values is not None:
-                choice, ok = QInputDialog.getItem(
-                    self, name, "Value:", list(meta.enum_values), int(current), False)
-                value = meta.enum_values.index(choice) if ok else None
-            elif meta.type == vp.ParamType.F32:
-                value, ok = QInputDialog.getDouble(
-                    self, name, f"Value [{meta.unit}] ({meta.min:g}..{meta.max:g}):",
-                    float(current), meta.min, meta.max, 6)
-                value = value if ok else None
-            else:
-                value, ok = QInputDialog.getInt(
-                    self, name, f"Value [{meta.unit}] ({meta.min:g}..{meta.max:g}):",
-                    int(current), int(meta.min), int(meta.max))
-                value = value if ok else None
-            if value is None:
-                return
-            status = self.link.write_param(name, value)
-            if status != vp.Status.OK:
-                self.statusBar().showMessage(f"PARAM_WRITE {name}: {status.name}", 4000)
-        except LinkTimeout as e:
-            self.statusBar().showMessage(str(e), 4000)
-        self._refresh_params()
+        self.params_panel.refresh()
 
     # -------------------------------------------------------------- timers
 
