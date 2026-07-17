@@ -24,6 +24,7 @@ from vortex_app.csvlog import CsvLogger
 from vortex_app.link import (DeviceLink, LinkTimeout, SerialTransport,
                              SimTransport, list_serial_ports)
 from vortex_app.rings import TelemetryStore
+from vortex_app.widgets.console import ConsolePanel
 from vortex_app.widgets.dashboard import StatTiles
 from vortex_app.widgets.params import ParamPanel
 from vortex_app.widgets.plots import ChannelPanel, LivePlots
@@ -70,7 +71,8 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self._build_dashboard_tab(), "Dashboard")
         self.tabs.addTab(self._build_tuning_tab(), "Tuning")
         self.tabs.addTab(self._build_params_tab(), "Parameters")
-        self.tabs.addTab(QWidget(), "Console")       # populated in Phase 5
+        self.console = ConsolePanel(lambda: self.link)
+        self.tabs.addTab(self.console, "Console")
         layout.addWidget(self.tabs, 1)
         self.setCentralWidget(root)
 
@@ -335,6 +337,7 @@ class MainWindow(QMainWindow):
         self.state_label.setStyleSheet(
             f"font-size:18px;font-weight:bold;color:{STATE_COLORS.get(state, '#808080')}")
         self.fault_label.setText(", ".join(vp.decode_faults(faults)))
+        self.console.record_status(state, faults)
 
 
 def run():

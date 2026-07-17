@@ -94,9 +94,10 @@ def test_event_log_records_changes_only():
     assert len(log.entries) == 2
     assert "ARMED" in log.entries[-1][2]
 
+    oc_mask = 1 << vp.Fault.OVERCURRENT         # Fault members are bit indices
     log.record_faults(0)                        # no faults, no entry
-    log.record_faults(int(vp.Fault.OVERCURRENT))
+    log.record_faults(oc_mask)
     assert len(log.entries) == 3
     assert "OVERCURRENT" in log.entries[-1][2]
-    log.record_faults(int(vp.Fault.OVERCURRENT))  # unchanged, no entry
+    log.record_faults(oc_mask)                  # unchanged, no entry
     assert len(log.entries) == 3
