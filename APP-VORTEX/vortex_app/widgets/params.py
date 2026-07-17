@@ -84,14 +84,22 @@ class ParamDelegate(QStyledItemDelegate):
 
     def setModelData(self, editor, model, index):  # noqa: ARG002
         meta = self._meta(index)
+        tol = 0.0
         if isinstance(editor, QComboBox):
             value = editor.currentIndex()
         elif isinstance(editor, QDoubleSpinBox):
             value = editor.value()
             if meta.type != vp.ParamType.F32:
                 value = int(round(value))     # u32-range integer editor
+            else:
+                # editor rounds to its decimals; a focus-out on an untouched
+                # field must not write that rounded value back
+                tol = 0.5 * 10.0 ** -editor.decimals()
         else:
             value = int(editor.value())
+        current = self.panel.value(meta.name)
+        if current is not None and abs(float(value) - float(current)) <= tol:
+            return
         self.panel.write_value(meta.name, value)
 
 
@@ -172,6 +180,9 @@ class ParamPanel(QWidget):
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
             self._items[meta.name] = item
             self._update_item(meta.name)
+            if meta.access == "RW":
+                # always-open editor: spin arrows visible, one click to edit
+                self.tree.openPersistentEditor(item, 1)
         self.set_filter(self.filter_edit.text())
 
     def _update_item(self, name: str) -> None:

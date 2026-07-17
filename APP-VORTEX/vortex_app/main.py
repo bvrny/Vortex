@@ -28,6 +28,7 @@ from vortex_app.widgets.console import ConsolePanel
 from vortex_app.widgets.dashboard import StatTiles
 from vortex_app.widgets.params import ParamPanel
 from vortex_app.widgets.plots import ChannelPanel, LivePlots
+from vortex_app.widgets.polar import PolarDQ
 from vortex_app.widgets.scope import ScopePanel
 from vortex_app.widgets.tuning import BandwidthKnob, MotorIdWizard
 
@@ -35,7 +36,7 @@ POLL_MS = 30
 PLOT_POINTS = 2000
 TORQUE_STEP_A = 0.5      # arrow-key nudge in torque mode
 SPEED_STEP_RPM = 100.0   # arrow-key nudge in speed mode
-DEFAULT_MASK = 0x1C7 | (1 << 12)  # ia ib ic vbus id iq + speed
+DEFAULT_MASK = 0x1C7 | (1 << 9) | (1 << 10) | (1 << 12)  # ia ib ic vbus id iq vd vq speed
 DEFAULT_DECIMATION = 8
 SIM_PARAM_FILE = Path.home() / ".vortex_sim_params.json"
 
@@ -151,7 +152,9 @@ class MainWindow(QMainWindow):
         self.record_btn.toggled.connect(self._on_record_toggled)
         row.addWidget(self.pause_btn)
         row.addWidget(self.record_btn)
+        self.polar = PolarDQ()
         left.addWidget(self.tiles, 0)
+        left.addWidget(self.polar, 1)
         left.addWidget(self.channel_panel, 1)
         left.addLayout(row)
 
@@ -352,6 +355,7 @@ class MainWindow(QMainWindow):
                 self._on_motor_id(f.payload)
         self.plots.update_from(self.store)
         self.tiles.update_from(self.store)
+        self.polar.update_from(self.store)
 
     def _on_motor_id(self, payload):
         if self.motorid_wizard is not None:
