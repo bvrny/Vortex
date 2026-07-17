@@ -48,8 +48,10 @@ def test_window_has_tabbed_layout(qapp):
     win = app_main.MainWindow()
     tabs = win.findChild(QTabWidget, "main_tabs")
     assert tabs is not None
+    # spec change (user, 2026-07-17): params live in a permanent side pane,
+    # so the tab bar no longer has a Parameters tab
     labels = [tabs.tabText(i) for i in range(tabs.count())]
-    assert labels == ["Dashboard", "Tuning", "Parameters", "Console"]
+    assert labels == ["Dashboard", "Tuning", "Console"]
 
 
 def test_safety_controls_and_pinned_attrs(qapp):
