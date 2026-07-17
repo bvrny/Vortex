@@ -14,8 +14,8 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox,
                                QFileDialog, QHBoxLayout, QLabel, QMainWindow,
-                               QMessageBox, QPushButton, QTabWidget,
-                               QVBoxLayout, QWidget)
+                               QMessageBox, QPushButton, QSplitter,
+                               QTabWidget, QVBoxLayout, QWidget)
 
 import vortex_protocol as vp
 from simulator import SimDevice
@@ -33,6 +33,8 @@ from vortex_app.widgets.tuning import BandwidthKnob, MotorIdWizard
 
 POLL_MS = 30
 PLOT_POINTS = 2000
+TORQUE_STEP_A = 0.5      # arrow-key nudge in torque mode
+SPEED_STEP_RPM = 100.0   # arrow-key nudge in speed mode
 DEFAULT_MASK = 0x1C7 | (1 << 12)  # ia ib ic vbus id iq + speed
 DEFAULT_DECIMATION = 8
 SIM_PARAM_FILE = Path.home() / ".vortex_sim_params.json"
@@ -67,13 +69,20 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(root)
         layout.setContentsMargins(6, 4, 6, 4)
         layout.addWidget(self._build_status_strip(), 0)
+        # params stay visible beside the waveforms: tune while watching
+        split = QSplitter(Qt.Horizontal, objectName="main_splitter")
+        self.params_pane = self._build_params_pane()
+        split.addWidget(self.params_pane)
         self.tabs = QTabWidget(objectName="main_tabs")
         self.tabs.addTab(self._build_dashboard_tab(), "Dashboard")
         self.tabs.addTab(self._build_tuning_tab(), "Tuning")
-        self.tabs.addTab(self._build_params_tab(), "Parameters")
         self.console = ConsolePanel(lambda: self.link)
         self.tabs.addTab(self.console, "Console")
-        layout.addWidget(self.tabs, 1)
+        split.addWidget(self.tabs)
+        split.setStretchFactor(0, 0)
+        split.setStretchFactor(1, 1)
+        split.setSizes([340, 900])
+        layout.addWidget(split, 1)
         self.setCentralWidget(root)
 
     def _build_toolbar(self):
@@ -95,12 +104,19 @@ class MainWindow(QMainWindow):
         self.stop_btn.clicked.connect(self._on_stop)
         self.mode_combo = QComboBox()
         self.mode_combo.addItems(["Torque (A)", "Speed (rpm)"])
-        self.sp_spin = QDoubleSpinBox(minimum=-30000, maximum=30000, decimals=2)
+        self.dir_combo = QComboBox()
+        self.dir_combo.addItems(["FWD", "REV"])
+        self.sp_spin = QDoubleSpinBox(minimum=0, maximum=30000, decimals=2)
         self.apply_btn = QPushButton("Set")
         self.apply_btn.clicked.connect(self._on_setpoint)
+        self.kb_drive_btn = QPushButton("Keys: ↑↓ setpoint  ←→ dir",
+                                        checkable=True)
+        self.kb_drive_btn.setToolTip(
+            "Drive from the keyboard: Up/Down nudge the setpoint, "
+            "Left/Right flip direction, Space = STOP")
         for w in (self.port_combo, self.port_edit, self.connect_btn, self.arm_btn,
-                  self.disarm_btn, self.stop_btn, self.mode_combo, self.sp_spin,
-                  self.apply_btn):
+                  self.disarm_btn, self.stop_btn, self.mode_combo, self.dir_combo,
+                  self.sp_spin, self.apply_btn, self.kb_drive_btn):
             tb.addWidget(w)
 
     def _build_status_strip(self):
@@ -190,7 +206,7 @@ class MainWindow(QMainWindow):
             self.csv_logger.close()
             self.csv_logger = None
 
-    def _build_params_tab(self):
+    def _build_params_pane(self):
         tab = QWidget()
         panel = QVBoxLayout(tab)
         self.params_panel = ParamPanel(lambda: self.link)
@@ -282,12 +298,35 @@ class MainWindow(QMainWindow):
             return
         mode = (vp.SetpointMode.TORQUE if self.mode_combo.currentIndex() == 0
                 else vp.SetpointMode.SPEED)
+        sign = 1.0 if self.dir_combo.currentIndex() == 0 else -1.0
         try:
-            status = self.link.setpoint(mode, self.sp_spin.value())
+            status = self.link.setpoint(mode, sign * self.sp_spin.value())
             if status != vp.Status.OK:
                 self.statusBar().showMessage(f"SETPOINT: {status.name}", 4000)
         except LinkTimeout as e:
             self.statusBar().showMessage(str(e), 4000)
+
+    def _handle_drive_key(self, key) -> bool:
+        """Arrow-key drive; returns True when the key was consumed."""
+        if not self.kb_drive_btn.isChecked() or self.link is None:
+            return False
+        step = (TORQUE_STEP_A if self.mode_combo.currentIndex() == 0
+                else SPEED_STEP_RPM)
+        if key == Qt.Key_Up:
+            self.sp_spin.setValue(self.sp_spin.value() + step)
+        elif key == Qt.Key_Down:
+            self.sp_spin.setValue(max(0.0, self.sp_spin.value() - step))
+        elif key in (Qt.Key_Left, Qt.Key_Right):
+            self.dir_combo.setCurrentIndex(1 - self.dir_combo.currentIndex())
+        else:
+            return False
+        self._on_setpoint()
+        return True
+
+    def keyPressEvent(self, event):
+        if self._handle_drive_key(event.key()):
+            return
+        super().keyPressEvent(event)
 
     # ------------------------------------------------------------- params
 

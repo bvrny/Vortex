@@ -59,7 +59,14 @@ class ParamDelegate(QStyledItemDelegate):
             spin.setStepType(QAbstractSpinBox.AdaptiveDecimalStepType)
             spin.setSuffix(f" {meta.unit}" if meta.unit else "")
             return spin
-        spin = QSpinBox(parent, minimum=int(meta.min), maximum=int(meta.max))
+        if (meta.min < -(2 ** 31)) or (meta.max > 2 ** 31 - 1):
+            # u32-range params overflow the signed-int QSpinBox (libshiboken
+            # abort); a 0-decimal double spinbox holds the full range exactly
+            spin = QDoubleSpinBox(parent, minimum=meta.min, maximum=meta.max,
+                                  decimals=0)
+        else:
+            spin = QSpinBox(parent, minimum=int(meta.min),
+                            maximum=int(meta.max))
         spin.setSuffix(f" {meta.unit}" if meta.unit else "")
         return spin
 
@@ -81,6 +88,8 @@ class ParamDelegate(QStyledItemDelegate):
             value = editor.currentIndex()
         elif isinstance(editor, QDoubleSpinBox):
             value = editor.value()
+            if meta.type != vp.ParamType.F32:
+                value = int(round(value))     # u32-range integer editor
         else:
             value = int(editor.value())
         self.panel.write_value(meta.name, value)
