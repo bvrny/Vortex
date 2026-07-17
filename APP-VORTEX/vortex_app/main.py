@@ -14,14 +14,16 @@ import pyqtgraph as pg
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox,
-                               QHBoxLayout, QInputDialog, QLabel, QLineEdit,
-                               QMainWindow, QMessageBox, QPushButton,
+                               QHBoxLayout, QInputDialog, QLabel, QMainWindow,
+                               QMessageBox, QPushButton, QTabWidget,
                                QTreeWidget, QTreeWidgetItem, QVBoxLayout,
                                QWidget)
 
 import vortex_protocol as vp
 from simulator import SimDevice
-from vortex_app.link import DeviceLink, LinkTimeout, SerialTransport, SimTransport
+from vortex_app import theme
+from vortex_app.link import (DeviceLink, LinkTimeout, SerialTransport,
+                             SimTransport, list_serial_ports)
 from vortex_app.rings import TelemetryStore
 
 POLL_MS = 30
@@ -56,20 +58,27 @@ class MainWindow(QMainWindow):
     # ---------------------------------------------------------------- UI
 
     def _build_ui(self):
-        root = QWidget()
-        layout = QHBoxLayout(root)
-        layout.addLayout(self._build_left_panel(), 0)
-        layout.addWidget(self._build_plots(), 1)
-        self.setCentralWidget(root)
         self._build_toolbar()
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        layout.setContentsMargins(6, 4, 6, 4)
+        layout.addWidget(self._build_status_strip(), 0)
+        self.tabs = QTabWidget(objectName="main_tabs")
+        self.tabs.addTab(self._build_dashboard_tab(), "Dashboard")
+        self.tabs.addTab(QWidget(), "Tuning")        # populated in Phase 4
+        self.tabs.addTab(self._build_params_tab(), "Parameters")
+        self.tabs.addTab(QWidget(), "Console")       # populated in Phase 5
+        layout.addWidget(self.tabs, 1)
+        self.setCentralWidget(root)
 
     def _build_toolbar(self):
         tb = self.addToolBar("main")
         tb.setMovable(False)
         self.port_combo = QComboBox()
         self.port_combo.addItems(["In-process simulator", "Serial port:"])
-        self.port_edit = QLineEdit("/dev/ttyACM0")
-        self.port_edit.setMaximumWidth(160)
+        self.port_edit = QComboBox(editable=True)
+        self.port_edit.addItems(list_serial_ports() or ["/dev/ttyACM0"])
+        self.port_edit.setMinimumWidth(160)
         self.connect_btn = QPushButton("Connect")
         self.connect_btn.clicked.connect(self._on_connect)
         self.arm_btn = QPushButton("ARM")
@@ -91,19 +100,28 @@ class MainWindow(QMainWindow):
                   self.apply_btn, self.motorid_btn):
             tb.addWidget(w)
 
-    def _build_left_panel(self):
-        panel = QVBoxLayout()
+    def _build_status_strip(self):
+        strip = QWidget()
+        row = QHBoxLayout(strip)
+        row.setContentsMargins(4, 2, 4, 2)
         self.state_label = QLabel("DISCONNECTED")
         self.state_label.setStyleSheet("font-size:18px;font-weight:bold")
         self.fault_label = QLabel("")
-        self.fault_label.setStyleSheet("color:#c80000")
+        self.fault_label.setStyleSheet(f"color:{theme.DANGER}")
         self.fault_label.setWordWrap(True)
         clear_btn = QPushButton("Clear faults")
         clear_btn.clicked.connect(lambda: self._simple_cmd(vp.Cmd.FAULT_CLEAR))
-        panel.addWidget(self.state_label)
-        panel.addWidget(self.fault_label)
-        panel.addWidget(clear_btn)
+        row.addWidget(self.state_label, 0)
+        row.addWidget(self.fault_label, 1)
+        row.addWidget(clear_btn, 0)
+        return strip
 
+    def _build_dashboard_tab(self):
+        return self._build_plots()
+
+    def _build_params_tab(self):
+        tab = QWidget()
+        panel = QVBoxLayout(tab)
         self.param_tree = QTreeWidget()
         self.param_tree.setHeaderLabels(["Parameter", "Value", "Unit"])
         self.param_tree.setColumnWidth(0, 200)
@@ -119,22 +137,21 @@ class MainWindow(QMainWindow):
                                                       self._refresh_params()))
             row.addWidget(b)
         panel.addLayout(row)
-        return panel
+        return tab
 
     def _build_plots(self):
-        pg.setConfigOptions(antialias=False)
         glw = pg.GraphicsLayoutWidget()
         self.curves = {}
         p1 = glw.addPlot(title="Phase currents [A]")
         p1.addLegend()
-        for name, color in zip(CURRENT_CHANNELS, ("#ff5050", "#50ff50", "#5090ff")):
-            self.curves[name] = p1.plot(pen=color, name=name)
+        for name in CURRENT_CHANNELS:
+            self.curves[name] = p1.plot(pen=theme.PLOT_COLORS[name], name=name)
         glw.nextRow()
         p2 = glw.addPlot(title="Bus voltage [V]")
-        self.curves["vbus"] = p2.plot(pen="#ffc850")
+        self.curves["vbus"] = p2.plot(pen=theme.PLOT_COLORS["vbus"])
         glw.nextRow()
         p3 = glw.addPlot(title="Speed [rpm]")
-        self.curves["speed"] = p3.plot(pen="#c890ff")
+        self.curves["speed"] = p3.plot(pen=theme.PLOT_COLORS["speed"])
         for p in (p2, p3):
             p.setXLink(p1)
         return glw
@@ -149,7 +166,7 @@ class MainWindow(QMainWindow):
             if self.port_combo.currentIndex() == 0:
                 transport = SimTransport(SimDevice(param_file=SIM_PARAM_FILE))
             else:
-                transport = SerialTransport(self.port_edit.text())
+                transport = SerialTransport(self.port_edit.currentText())
             link = DeviceLink(transport)
             status, _ = link.request(vp.Cmd.HELLO)
             if status != vp.Status.OK:
@@ -302,6 +319,7 @@ class MainWindow(QMainWindow):
 
 def run():
     app = QApplication([])
+    theme.apply_dark(app)
     win = MainWindow()
     win.show()
     app.exec()

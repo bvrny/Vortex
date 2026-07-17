@@ -38,6 +38,15 @@ class SimTransport:
         pass
 
 
+def list_serial_ports() -> list[str]:
+    """Device paths of serial ports on this machine ([] without pyserial)."""
+    try:
+        from serial.tools import list_ports  # deferred, like SerialTransport
+    except ImportError:
+        return []
+    return [p.device for p in list_ports.comports()]
+
+
 class SerialTransport:
     """pyserial transport for real hardware or the pty simulator."""
 
