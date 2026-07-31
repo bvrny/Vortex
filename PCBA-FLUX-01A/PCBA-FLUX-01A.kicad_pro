@@ -790,6 +790,7 @@
       "netlist": "",
       "plot": "",
       "specctra_dsn": "",
+      "step": "",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -912,7 +913,7 @@
         "uuid": "27d049f2-0962-4d9e-88e1-d5cca5250f12"
       }
     ],
-    "used_designators": "TH2-3,J1-12,R24,R26-72,R74,R80-95,#PWR29-30,#PWR34-79,#PWR84-120,U5-10,Q6-13,Q16-20,D6-13,C4,C7,C11,C15,C19,C23,C26,C42,C44,C46,C49,C51-82,C96-150",
+    "used_designators": "TH2-3,J1-12,R24,R26-72,R74,R76-95,#PWR29-30,#PWR34-79,#PWR84-120,D6-13,U5-10,Q6-13,Q16-20,C4,C7,C11,C15,C19,C23,C26,C42,C44,C46,C49,C51-82,C96-150",
     "variants": [
       {
         "name": "No DNP components"

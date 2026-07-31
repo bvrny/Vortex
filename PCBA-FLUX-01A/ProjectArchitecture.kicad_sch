@@ -2242,6 +2242,16 @@
 	)
 	(wire
 		(pts
+			(xy 270.51 129.54) (xy 344.17 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0367f856-ebfb-4144-8419-19eaf950f5de")
+	)
+	(wire
+		(pts
 			(xy 80.01 161.29) (xy 80.01 163.83)
 		)
 		(stroke
@@ -2259,16 +2269,6 @@
 			(type default)
 		)
 		(uuid "060018f4-fba4-4cf5-9098-d6b2424f19b3")
-	)
-	(wire
-		(pts
-			(xy 166.37 127) (xy 240.03 127)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "06a7a832-e9b9-45df-8e79-95278e1392ba")
 	)
 	(wire
 		(pts
@@ -2292,16 +2292,6 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 104.14) (xy 148.59 104.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "108be27f-457b-4029-a61c-db0951883bb9")
-	)
-	(wire
-		(pts
 			(xy 146.05 96.52) (xy 146.05 97.79)
 		)
 		(stroke
@@ -2312,7 +2302,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 175.26) (xy 167.64 167.64)
+			(xy 167.64 175.26) (xy 167.64 170.18)
 		)
 		(stroke
 			(width 0)
@@ -2352,7 +2342,7 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 177.8) (xy 170.18 171.45)
+			(xy 170.18 177.8) (xy 170.18 175.26)
 		)
 		(stroke
 			(width 0)
@@ -2409,16 +2399,6 @@
 			(type default)
 		)
 		(uuid "25b25545-7938-4ad8-9508-2eac83c31b07")
-	)
-	(wire
-		(pts
-			(xy 172.72 97.79) (xy 172.72 104.14)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "25e72a86-3d91-4221-9782-4feeb8ecfcaa")
 	)
 	(wire
 		(pts
@@ -2572,7 +2552,7 @@
 	)
 	(wire
 		(pts
-			(xy 270.51 166.37) (xy 344.17 166.37)
+			(xy 270.51 167.64) (xy 344.17 167.64)
 		)
 		(stroke
 			(width 0)
@@ -2632,16 +2612,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 101.6) (xy 170.18 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4827368f-2b58-4fc5-bd94-07230e71d7c3")
-	)
-	(wire
-		(pts
 			(xy 156.21 172.72) (xy 156.21 173.99)
 		)
 		(stroke
@@ -2652,17 +2622,7 @@
 	)
 	(wire
 		(pts
-			(xy 240.03 88.9) (xy 167.64 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "49296442-2b5b-4b65-b8c6-fcd6063f556b")
-	)
-	(wire
-		(pts
-			(xy 167.64 167.64) (xy 240.03 167.64)
+			(xy 167.64 170.18) (xy 240.03 170.18)
 		)
 		(stroke
 			(width 0)
@@ -2689,16 +2649,6 @@
 			(type default)
 		)
 		(uuid "4b25563e-be2a-4d60-8897-8162cc802294")
-	)
-	(wire
-		(pts
-			(xy 172.72 129.54) (xy 240.03 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4c8a698e-bb8d-4dda-aaed-eed8ef6fc3b2")
 	)
 	(wire
 		(pts
@@ -2832,7 +2782,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 99.06) (xy 167.64 91.44)
+			(xy 167.64 99.06) (xy 167.64 96.52)
 		)
 		(stroke
 			(width 0)
@@ -2862,26 +2812,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 95.25) (xy 240.03 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "70f687a5-388a-43a3-ad3f-36014cfc961b")
-	)
-	(wire
-		(pts
-			(xy 153.67 101.6) (xy 170.18 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "731bf5d8-a3f4-4795-add4-570de0f8a659")
-	)
-	(wire
-		(pts
 			(xy 186.69 113.03) (xy 186.69 118.11)
 		)
 		(stroke
@@ -2899,16 +2829,6 @@
 			(type default)
 		)
 		(uuid "748d2a53-2046-4635-8256-3fe2e850d6a1")
-	)
-	(wire
-		(pts
-			(xy 167.64 91.44) (xy 240.03 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "75ec22e3-0785-4d95-ac1c-cdb23276bceb")
 	)
 	(wire
 		(pts
@@ -3042,7 +2962,7 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 171.45) (xy 240.03 171.45)
+			(xy 170.18 175.26) (xy 240.03 175.26)
 		)
 		(stroke
 			(width 0)
@@ -3232,7 +3152,7 @@
 	)
 	(wire
 		(pts
-			(xy 240.03 173.99) (xy 172.72 173.99)
+			(xy 240.03 177.8) (xy 172.72 177.8)
 		)
 		(stroke
 			(width 0)
@@ -3372,16 +3292,6 @@
 	)
 	(wire
 		(pts
-			(xy 166.37 132.08) (xy 172.72 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b91b3ba9-1017-4d44-9b94-0c8193fe8f90")
-	)
-	(wire
-		(pts
 			(xy 158.75 96.52) (xy 158.75 99.06)
 		)
 		(stroke
@@ -3392,7 +3302,7 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 173.99) (xy 172.72 180.34)
+			(xy 172.72 177.8) (xy 172.72 180.34)
 		)
 		(stroke
 			(width 0)
@@ -3542,16 +3452,6 @@
 	)
 	(wire
 		(pts
-			(xy 270.51 128.27) (xy 344.17 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e34fac29-d49b-43aa-8764-75ca18eb459e")
-	)
-	(wire
-		(pts
 			(xy 66.04 161.29) (xy 64.77 161.29)
 		)
 		(stroke
@@ -3562,7 +3462,7 @@
 	)
 	(wire
 		(pts
-			(xy 270.51 90.17) (xy 342.9 90.17)
+			(xy 270.51 91.44) (xy 342.9 91.44)
 		)
 		(stroke
 			(width 0)
@@ -3579,16 +3479,6 @@
 			(type default)
 		)
 		(uuid "ec469abf-e114-4740-8fd3-bb84a2fee83f")
-	)
-	(wire
-		(pts
-			(xy 172.72 132.08) (xy 172.72 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ed76a9d4-452c-4742-b3fa-8f7f5317fa9b")
 	)
 	(wire
 		(pts
@@ -3619,16 +3509,6 @@
 			(type default)
 		)
 		(uuid "fc210e28-26a4-4a48-9467-1cd976386424")
-	)
-	(wire
-		(pts
-			(xy 240.03 97.79) (xy 172.72 97.79)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fc415145-9cb3-4298-8a95-ba1a8cbe507f")
 	)
 	(wire
 		(pts
@@ -14815,7 +14695,7 @@
 		)
 	)
 	(image
-		(at 358.14 128.27)
+		(at 358.14 129.54)
 		(scale 0.401781)
 		(uuid "287795dd-0066-4efb-9672-b88b4c1c2f70")
 		(data "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACVT/22AAAAA3NCSVQICAjb4U/gAAAgAElEQVR4"
@@ -22170,7 +22050,7 @@
 		)
 	)
 	(image
-		(at 356.87 90.17)
+		(at 356.87 91.44)
 		(scale 0.401781)
 		(uuid "b48080e6-3e43-458d-9194-06677fdb772a")
 		(data "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACVT/22AAAAA3NCSVQICAjb4U/gAAAgAElEQVR4"
@@ -26133,7 +26013,7 @@
 		)
 	)
 	(image
-		(at 358.14 166.37)
+		(at 358.14 167.64)
 		(scale 0.401781)
 		(uuid "e8f82742-d273-4c58-beb6-ae8b2eed8324")
 		(data "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACVT/22AAAAA3NCSVQICAjb4U/gAAAgAElEQVR4"
@@ -27239,7 +27119,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x01")
-		(at 349.25 166.37 0)
+		(at 349.25 167.64 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -27249,7 +27129,7 @@
 		(dnp yes)
 		(uuid "1edc0db8-c39b-434a-9bab-1220b1959033")
 		(property "Reference" "J6"
-			(at 347.98 163.83 0)
+			(at 347.98 165.1 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27260,7 +27140,7 @@
 			)
 		)
 		(property "Value" "Screw_Terminal_01x01"
-			(at 351.79 167.6399 0)
+			(at 351.79 168.9099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27272,7 +27152,7 @@
 			)
 		)
 		(property "Footprint" "Bvrny's_library:M8_NutTerminal"
-			(at 349.25 166.37 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27283,7 +27163,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 349.25 166.37 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27294,7 +27174,7 @@
 			)
 		)
 		(property "Description" "Generic screw terminal, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 349.25 166.37 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27318,7 +27198,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x01")
-		(at 347.98 90.17 0)
+		(at 347.98 91.44 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -27328,7 +27208,7 @@
 		(dnp yes)
 		(uuid "2a70ce0c-6651-4dc4-868a-40b6fb78c231")
 		(property "Reference" "J4"
-			(at 346.71 87.376 0)
+			(at 346.71 88.646 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27339,7 +27219,7 @@
 			)
 		)
 		(property "Value" "Screw_Terminal_01x01"
-			(at 350.52 91.4399 0)
+			(at 350.52 92.7099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27351,7 +27231,7 @@
 			)
 		)
 		(property "Footprint" "Bvrny's_library:M8_NutTerminal"
-			(at 347.98 90.17 0)
+			(at 347.98 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27362,7 +27242,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 347.98 90.17 0)
+			(at 347.98 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27373,7 +27253,7 @@
 			)
 		)
 		(property "Description" "Generic screw terminal, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 347.98 90.17 0)
+			(at 347.98 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28657,7 +28537,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x01")
-		(at 349.25 128.27 0)
+		(at 349.25 129.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -28667,7 +28547,7 @@
 		(dnp yes)
 		(uuid "fea641f9-f865-49d5-bdd6-94f623ba3bc1")
 		(property "Reference" "J5"
-			(at 347.98 125.476 0)
+			(at 347.98 126.746 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -28678,7 +28558,7 @@
 			)
 		)
 		(property "Value" "Screw_Terminal_01x01"
-			(at 351.79 129.5399 0)
+			(at 351.79 130.8099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28690,7 +28570,7 @@
 			)
 		)
 		(property "Footprint" "Bvrny's_library:M8_NutTerminal"
-			(at 349.25 128.27 0)
+			(at 349.25 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28701,7 +28581,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 349.25 128.27 0)
+			(at 349.25 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28712,7 +28592,7 @@
 			)
 		)
 		(property "Description" "Generic screw terminal, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 349.25 128.27 0)
+			(at 349.25 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28736,7 +28616,7 @@
 	)
 	(sheet
 		(at 240.03 118.11)
-		(size 30.48 20.32)
+		(size 30.48 22.86)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -28763,7 +28643,7 @@
 			)
 		)
 		(property "Sheetfile" "PhaseV.kicad_sch"
-			(at 240.03 139.0908 0)
+			(at 240.03 141.6308 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28775,23 +28655,13 @@
 			)
 		)
 		(pin "PhaseV_out" output
-			(at 270.51 128.27 0)
+			(at 270.51 129.54 0)
 			(uuid "6e4398ec-910d-4f6c-8641-a3ef895feb3c")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-		(pin "phV_current" output
-			(at 240.03 127 180)
-			(uuid "61e5d47f-7f38-4925-80b5-d7c10307b57d")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 		(pin "phV_HI" input
@@ -28815,7 +28685,7 @@
 			)
 		)
 		(pin "phV_NTCctrl" input
-			(at 240.03 133.35 180)
+			(at 240.03 135.89 180)
 			(uuid "43fb48f5-4daf-4e83-8be0-251f9c94fc1c")
 			(effects
 				(font
@@ -28825,7 +28695,7 @@
 			)
 		)
 		(pin "phV_NTCout" output
-			(at 240.03 135.89 180)
+			(at 240.03 138.43 180)
 			(uuid "594cab22-8ace-4cf8-a6e3-d8f4ef275781")
 			(effects
 				(font
@@ -28835,8 +28705,28 @@
 			)
 		)
 		(pin "phV_voltage" output
-			(at 240.03 129.54 180)
+			(at 240.03 132.08 180)
 			(uuid "89318587-4fac-4d2d-b196-674e77d3e223")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phV_I+" output
+			(at 240.03 127 180)
+			(uuid "e3b67659-f119-425c-94b3-e0732a2c7eb8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phV_I-" output
+			(at 240.03 129.54 180)
+			(uuid "7bfb145a-79ee-47df-b00c-d8e9045f05d0")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28854,7 +28744,7 @@
 	)
 	(sheet
 		(at 240.03 156.21)
-		(size 30.48 20.32)
+		(size 30.48 24.13)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -28881,7 +28771,7 @@
 			)
 		)
 		(property "Sheetfile" "PhaseW.kicad_sch"
-			(at 240.03 177.1908 0)
+			(at 240.03 181.0008 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28893,23 +28783,13 @@
 			)
 		)
 		(pin "PhaseW_out" output
-			(at 270.51 166.37 0)
+			(at 270.51 167.64 0)
 			(uuid "05b65049-27e1-4049-858c-0496a0f28045")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-		(pin "phW_current" output
-			(at 240.03 165.1 180)
-			(uuid "99dcf500-acf7-466e-941e-26b34d4fd6ae")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 		(pin "phW_HI" input
@@ -28933,7 +28813,7 @@
 			)
 		)
 		(pin "phW_NTCctrl" input
-			(at 240.03 171.45 180)
+			(at 240.03 175.26 180)
 			(uuid "296d81fc-cdbe-4844-91ce-268957e6a69a")
 			(effects
 				(font
@@ -28943,7 +28823,7 @@
 			)
 		)
 		(pin "phW_NTCout" output
-			(at 240.03 173.99 180)
+			(at 240.03 177.8 180)
 			(uuid "14648df2-2093-434e-9431-c982bc4d4812")
 			(effects
 				(font
@@ -28953,8 +28833,28 @@
 			)
 		)
 		(pin "phW_voltage" output
-			(at 240.03 167.64 180)
+			(at 240.03 170.18 180)
 			(uuid "187ee4dc-178c-4ac5-bc6c-47d78da5713e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phW_I+" output
+			(at 240.03 165.1 180)
+			(uuid "f34961f3-c8b6-49e4-903a-a81aae8d7d42")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phW_I-" output
+			(at 240.03 167.64 180)
+			(uuid "f189151b-9947-4a58-93ab-a0a08ee08745")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28972,7 +28872,7 @@
 	)
 	(sheet
 		(at 240.03 80.01)
-		(size 30.48 20.32)
+		(size 30.48 22.86)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -28999,7 +28899,7 @@
 			)
 		)
 		(property "Sheetfile" "PhaseU.kicad_sch"
-			(at 240.03 100.9908 0)
+			(at 240.03 103.5308 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29011,23 +28911,13 @@
 			)
 		)
 		(pin "PhaseU_out" output
-			(at 270.51 90.17 0)
+			(at 270.51 91.44 0)
 			(uuid "41a2c99c-f3a2-4a0c-9d2e-d5c94ef1d388")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-		(pin "phU_current" output
-			(at 240.03 88.9 180)
-			(uuid "d3b2666e-6635-4098-a0e8-5864425ae0a7")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 		(pin "phU_HI" input
@@ -29051,7 +28941,7 @@
 			)
 		)
 		(pin "phU_NTCctrl" input
-			(at 240.03 97.79 180)
+			(at 240.03 100.33 180)
 			(uuid "e881b3c0-9e04-408e-ac6a-809e0bba5256")
 			(effects
 				(font
@@ -29061,7 +28951,7 @@
 			)
 		)
 		(pin "phU_NTCout" output
-			(at 240.03 95.25 180)
+			(at 240.03 97.79 180)
 			(uuid "27d38272-87b2-4b28-b217-f2e5dd0fabe8")
 			(effects
 				(font
@@ -29071,8 +28961,28 @@
 			)
 		)
 		(pin "phU_voltage" output
-			(at 240.03 91.44 180)
+			(at 240.03 93.98 180)
 			(uuid "df7213c7-f6de-4506-adcc-e4a5a5b38bd8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phU_I+" output
+			(at 240.03 88.9 180)
+			(uuid "dc009e5e-90fe-463e-98dc-f0054bd843cf")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "phU_I-" output
+			(at 240.03 91.44 180)
+			(uuid "1d6960eb-f4e1-40d1-b264-f715af8b56d8")
 			(effects
 				(font
 					(size 1.27 1.27)
