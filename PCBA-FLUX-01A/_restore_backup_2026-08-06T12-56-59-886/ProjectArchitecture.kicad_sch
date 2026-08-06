@@ -1149,7 +1149,7 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 129.54) (xy 344.17 129.54)
+			(xy 270.51 129.54) (xy 344.17 129.54)
 		)
 		(stroke
 			(width 0)
@@ -1369,7 +1369,7 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 176.53) (xy 345.44 176.53)
+			(xy 270.51 167.64) (xy 344.17 167.64)
 		)
 		(stroke
 			(width 0)
@@ -18290,7 +18290,7 @@
 		)
 	)
 	(image
-		(at 359.41 176.53)
+		(at 358.14 167.64)
 		(scale 0.401781)
 		(uuid "e8f82742-d273-4c58-beb6-ae8b2eed8324")
 		(data "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACVT/22AAAAA3NCSVQICAjb4U/gAAAgAElEQVR4"
@@ -19216,7 +19216,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x01")
-		(at 350.52 176.53 0)
+		(at 349.25 167.64 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -19226,7 +19226,7 @@
 		(dnp yes)
 		(uuid "1edc0db8-c39b-434a-9bab-1220b1959033")
 		(property "Reference" "J6"
-			(at 349.25 173.99 0)
+			(at 347.98 165.1 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19237,7 +19237,7 @@
 			)
 		)
 		(property "Value" "Screw_Terminal_01x01"
-			(at 353.06 177.7999 0)
+			(at 351.79 168.9099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19249,7 +19249,7 @@
 			)
 		)
 		(property "Footprint" "Bvrny's_library:M8_NutTerminal"
-			(at 350.52 176.53 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19260,7 +19260,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 350.52 176.53 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19271,7 +19271,7 @@
 			)
 		)
 		(property "Description" "Generic screw terminal, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 350.52 176.53 0)
+			(at 349.25 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20812,8 +20812,8 @@
 		)
 	)
 	(sheet
-		(at 241.3 114.3)
-		(size 38.1 38.1)
+		(at 240.03 118.11)
+		(size 30.48 22.86)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -20829,7 +20829,7 @@
 		)
 		(uuid "15387549-54d2-4e59-b4cd-1d2aae829a6d")
 		(property "Sheetname" "Phase V"
-			(at 241.3 113.5122 0)
+			(at 240.03 117.3222 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20840,7 +20840,7 @@
 			)
 		)
 		(property "Sheetfile" "PhaseV.kicad_sch"
-			(at 241.3 153.0608 0)
+			(at 240.03 141.6308 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20852,113 +20852,13 @@
 			)
 		)
 		(pin "PhaseV_out" output
-			(at 279.4 129.54 0)
+			(at 270.51 129.54 0)
 			(uuid "6e4398ec-910d-4f6c-8641-a3ef895feb3c")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-		(pin "phV_HS" passive
-			(at 241.3 121.92 180)
-			(uuid "d0527ea5-9f46-46e6-ba94-bc2a416d033c")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_HSgate1" passive
-			(at 241.3 129.54 180)
-			(uuid "8e2ea145-b15e-4b0d-8b1f-880cf5490b10")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_HSgate2" passive
-			(at 241.3 134.62 180)
-			(uuid "f407b985-12d7-41d7-99ce-dbe17292baff")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_I+" output
-			(at 241.3 140.97 180)
-			(uuid "8f804e49-b62f-4868-b998-99d1abd76214")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_I-" output
-			(at 241.3 144.78 180)
-			(uuid "aae06462-bcac-4287-81c2-b42e4d2109cf")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_LSgate1" passive
-			(at 241.3 148.59 180)
-			(uuid "e5f1ab1c-6a9e-40e9-b547-987c10229971")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_LSgate2" passive
-			(at 241.3 132.08 180)
-			(uuid "5c634730-6fa5-4341-a61a-4805b13bc204")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_NTCctrl" input
-			(at 241.3 125.73 180)
-			(uuid "a91f84e2-0e4f-485e-af8d-15ca87caf942")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_NTCout" output
-			(at 241.3 118.11 180)
-			(uuid "88ad07a7-1a46-4e10-87bb-22f8b189a76a")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phV_Voltage" output
-			(at 241.3 127 180)
-			(uuid "d79456f6-28e4-48ea-b007-724594c4438e")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 		(instances
@@ -20970,8 +20870,8 @@
 		)
 	)
 	(sheet
-		(at 241.3 165.1)
-		(size 38.1 38.1)
+		(at 240.03 156.21)
+		(size 30.48 24.13)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -20987,7 +20887,7 @@
 		)
 		(uuid "b9a06704-c2e8-49e4-890a-5ccbb7eb7803")
 		(property "Sheetname" "Phase W"
-			(at 241.3 164.3122 0)
+			(at 240.03 155.4222 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20998,7 +20898,7 @@
 			)
 		)
 		(property "Sheetfile" "PhaseW.kicad_sch"
-			(at 241.3 203.8608 0)
+			(at 240.03 181.0008 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21010,113 +20910,13 @@
 			)
 		)
 		(pin "PhaseW_out" output
-			(at 279.4 176.53 0)
+			(at 270.51 167.64 0)
 			(uuid "05b65049-27e1-4049-858c-0496a0f28045")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-			)
-		)
-		(pin "phW_HS" passive
-			(at 241.3 168.91 180)
-			(uuid "f104acca-7706-4e54-b3a7-970b903e254c")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_HSgate1" passive
-			(at 241.3 172.72 180)
-			(uuid "9a7ce089-a190-4bcf-b8ef-b8c5b142170d")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_HSgate2" passive
-			(at 241.3 175.26 180)
-			(uuid "efb9368d-0d94-4af0-b7fb-bc5355322420")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_I+" output
-			(at 241.3 177.8 180)
-			(uuid "47d87bd0-bf53-4d4a-b21a-6e27b3287b19")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_I-" output
-			(at 241.3 180.34 180)
-			(uuid "581da8b5-7d28-4853-be7e-08e0f6d8f67e")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_LSgate1" passive
-			(at 241.3 184.15 180)
-			(uuid "5cb5bd8c-1683-4142-95ed-cae348a16020")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_LSgate2" passive
-			(at 241.3 190.5 180)
-			(uuid "4d653fe0-e11b-4245-93a7-ad271c9f8663")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_NTCctrl" input
-			(at 241.3 195.58 180)
-			(uuid "ec01f49a-d395-4884-9a99-c9b5aca3ce2e")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_NTCout" output
-			(at 241.3 191.77 180)
-			(uuid "ff3cf740-ef37-4494-8e5f-87968958e897")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phW_Voltage" output
-			(at 241.3 187.96 180)
-			(uuid "62865a7b-45da-45d4-9601-4eefb2e7e195")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 			)
 		)
 		(instances
@@ -21248,7 +21048,7 @@
 			)
 		)
 		(pin "phU_NTCctrl" input
-			(at 241.3 87.63 180)
+			(at 241.3 88.9 180)
 			(uuid "24501d1d-b0e7-4a97-a6b5-1c61e34c96f0")
 			(effects
 				(font
@@ -21260,16 +21060,6 @@
 		(pin "phU_NTCout" output
 			(at 241.3 90.17 180)
 			(uuid "3196d631-20f8-44ba-9c27-9c07680c9ad6")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "phU_Voltage" output
-			(at 241.3 82.55 180)
-			(uuid "c32a7374-4ba3-4394-bdb9-e759f8f9c0ae")
 			(effects
 				(font
 					(size 1.27 1.27)
