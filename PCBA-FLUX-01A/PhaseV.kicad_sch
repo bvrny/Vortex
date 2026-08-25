@@ -650,148 +650,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Device:NetTie_2"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 0)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom no)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "NT"
-				(at 0 1.27 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "NetTie_2"
-				(at 0 -1.27 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Net tie, 2 pins"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "net tie short"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "Net*Tie*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "NetTie_2_0_1"
-				(polyline
-					(pts
-						(xy -1.27 0) (xy 1.27 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "NetTie_2_1_1"
-				(pin passive line
-					(at -2.54 0 0)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 0 180)
-					(length 2.54)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Device:R"
 			(pin_numbers
 				(hide yes)
@@ -2190,18 +2048,6 @@
 		(uuid "1f4646e6-7fb4-4a02-a615-fbbceadd5198")
 	)
 	(rectangle
-		(start 318.77 40.64)
-		(end 394.97 129.54)
-		(stroke
-			(width 0.381)
-			(type solid)
-		)
-		(fill
-			(type none)
-		)
-		(uuid "9c27cdb2-41fd-4530-8c80-a68dc49077e7")
-	)
-	(rectangle
 		(start 293.37 142.24)
 		(end 394.97 231.14)
 		(stroke
@@ -2212,18 +2058,6 @@
 			(type none)
 		)
 		(uuid "fa23385c-fd60-4729-87aa-a4f65826434b")
-	)
-	(text "DC-Link"
-		(exclude_from_sim no)
-		(at 328.168 43.688 0)
-		(effects
-			(font
-				(size 2.54 2.54)
-				(thickness 0.508)
-				(bold yes)
-			)
-		)
-		(uuid "0f345338-d268-4f07-ba61-4b223d992399")
 	)
 	(text "Gate driver & bridge"
 		(exclude_from_sim no)
@@ -2251,7 +2085,7 @@
 	)
 	(text_box "LAYOUT NOTE:\nKelvin-sense at the shunt pads - dedicated sense traces off the body of the shunt, not tapped from power copper. Route phA_Shunt± as a tight differential pair."
 		(exclude_from_sim no)
-		(at 274.32 104.14 0)
+		(at 248.92 111.2943 0)
 		(size 17.78 11.8957)
 		(margins 2.25 2.25 2.25 2.25)
 		(stroke
@@ -2321,60 +2155,11 @@
 		)
 		(uuid "cdc0663c-93c6-4969-aa23-20b59d848392")
 	)
-	(text_box "LAYOUT NOTE:\nPlace inside the commutation loop, directly across each leg's HS-drain ↔ LS-source, shortest possible. "
-		(exclude_from_sim no)
-		(at 361.95 66.8443 0)
-		(size 17.78 11.8957)
-		(margins 2.25 2.25 2.25 2.25)
-		(stroke
-			(width 0.6096)
-			(type solid)
-			(color 0 0 255 1)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(face "Arial")
-				(size 0.635 0.635)
-				(thickness 0.4)
-				(bold yes)
-				(color 0 0 255 1)
-			)
-			(justify left)
-		)
-		(uuid "e9a09c38-2e42-410b-a9e4-291cf0af4710")
-	)
 	(junction
-		(at 367.03 81.28)
+		(at 271.78 71.12)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "0213cb72-5a08-4c86-a5ba-768c086d4231")
-	)
-	(junction
-		(at 391.16 81.28)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "0dc42791-32f9-4ff0-b8af-27bb45e889dc")
-	)
-	(junction
-		(at 354.33 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "10f45ac4-5d30-4be6-9654-72a92f51774d")
-	)
-	(junction
-		(at 354.33 110.49)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "13441168-fd08-41e6-bce3-e8845716e90d")
-	)
-	(junction
-		(at 341.63 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "144f4963-1485-4d0f-b0a5-c01385f3da2d")
+		(uuid "00c2cdc2-c8c5-46e6-b311-7889b8b673e3")
 	)
 	(junction
 		(at 337.82 179.07)
@@ -2407,16 +2192,10 @@
 		(uuid "2cb9ca56-7f74-40e6-a0e2-455820b56fd7")
 	)
 	(junction
-		(at 379.73 81.28)
+		(at 271.78 90.17)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "2f389528-b4e1-4edd-b746-dc2b1bd9b6fd")
-	)
-	(junction
-		(at 261.62 71.12)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3580a160-1a70-4791-b4fb-d136faf66fd5")
+		(uuid "3fbce1ca-e698-488c-8625-07218cee1b49")
 	)
 	(junction
 		(at 137.16 81.28)
@@ -2449,34 +2228,10 @@
 		(uuid "63225fd3-7b2e-4505-821d-2da7a1619645")
 	)
 	(junction
-		(at 391.16 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "690ee10e-4459-4b36-953e-589fd9555cc3")
-	)
-	(junction
-		(at 367.03 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "6b73cfe9-55b8-4d95-ae6e-4796fdf5d304")
-	)
-	(junction
-		(at 354.33 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "6c74e428-9597-41c5-8076-891bff5d3cc1")
-	)
-	(junction
 		(at 160.02 109.22)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6c84d020-3852-4322-8d75-450afcc35801")
-	)
-	(junction
-		(at 341.63 110.49)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "750a05df-361f-43f2-b387-5eb848dc0418")
 	)
 	(junction
 		(at 160.02 81.28)
@@ -2503,24 +2258,6 @@
 		(uuid "8852385c-9ac3-4999-ba4c-7abb57639c77")
 	)
 	(junction
-		(at 367.03 110.49)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9dc2e547-8f0e-40fc-b191-b78e39c74dc2")
-	)
-	(junction
-		(at 379.73 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9fc0ecd2-6bf5-4156-a302-dabe8fd08c45")
-	)
-	(junction
-		(at 341.63 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "a168979e-b287-4897-a897-570a55bb2b14")
-	)
-	(junction
 		(at 255.27 92.71)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2539,12 +2276,6 @@
 		(uuid "c89ac35e-cd00-41d7-a65d-451a0b06670c")
 	)
 	(junction
-		(at 379.73 110.49)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ca138884-67fd-4ca0-b3b5-f26312886493")
-	)
-	(junction
 		(at 255.27 82.55)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2557,34 +2288,16 @@
 		(uuid "d11484b6-62ad-49a9-97d6-a8e251aa0c8b")
 	)
 	(junction
-		(at 379.73 120.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d64c9c3b-f1a0-49f7-84b7-a920f3ad3364")
-	)
-	(junction
-		(at 341.63 81.28)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d8f003ad-8c0a-4eea-bd8a-1f697f9afbb1")
-	)
-	(junction
-		(at 367.03 93.98)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "dcd3d20b-6a63-46b9-8427-084229ed691f")
-	)
-	(junction
 		(at 337.82 189.23)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e8184b79-d4cf-40a1-b609-8cbba3f34ddb")
 	)
 	(junction
-		(at 354.33 81.28)
+		(at 284.48 90.17)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "e81b79f6-6b1c-43b2-8be3-4b3ff90641d6")
+		(uuid "ed5753b4-468d-4fd8-b8ac-483ff558b83a")
 	)
 	(junction
 		(at 363.22 199.39)
@@ -2613,16 +2326,6 @@
 			(type default)
 		)
 		(uuid "035f7263-386b-47da-a906-e962d1991872")
-	)
-	(wire
-		(pts
-			(xy 354.33 110.49) (xy 367.03 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "07e61ddd-5b48-4ee9-93f1-c5a3fdcb93e6")
 	)
 	(wire
 		(pts
@@ -2666,36 +2369,6 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 81.28) (xy 341.63 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0dd92472-accc-49ad-b3aa-825b083e1ef7")
-	)
-	(wire
-		(pts
-			(xy 392.43 119.38) (xy 392.43 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e71d59e-41e8-4d91-bc18-73d4d216849a")
-	)
-	(wire
-		(pts
-			(xy 341.63 119.38) (xy 341.63 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e7edf96-e49e-4523-ad0c-b4cac780ff4b")
-	)
-	(wire
-		(pts
 			(xy 137.16 81.28) (xy 137.16 82.55)
 		)
 		(stroke
@@ -2736,16 +2409,6 @@
 	)
 	(wire
 		(pts
-			(xy 367.03 110.49) (xy 379.73 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "17205ce3-fbfe-40d8-ac8f-b53f835cf78e")
-	)
-	(wire
-		(pts
 			(xy 176.53 109.22) (xy 160.02 109.22)
 		)
 		(stroke
@@ -2763,16 +2426,6 @@
 			(type default)
 		)
 		(uuid "19cbfdd3-f537-4fd2-9619-5af5b1f99ad8")
-	)
-	(wire
-		(pts
-			(xy 367.03 111.76) (xy 367.03 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1d0d2014-6a96-4231-9b13-7d6ed264d3de")
 	)
 	(wire
 		(pts
@@ -2796,16 +2449,6 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 81.28) (xy 341.63 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2432fc79-03e4-4114-9b54-284b00451973")
-	)
-	(wire
-		(pts
 			(xy 97.79 71.12) (xy 97.79 72.39)
 		)
 		(stroke
@@ -2813,16 +2456,6 @@
 			(type default)
 		)
 		(uuid "2552c424-235b-47e1-8840-2450bba00074")
-	)
-	(wire
-		(pts
-			(xy 379.73 83.82) (xy 379.73 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "28251e5d-1920-4326-8b4c-672dcfb86a88")
 	)
 	(wire
 		(pts
@@ -2906,16 +2539,6 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 81.28) (xy 328.93 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "39943414-6516-4f30-b208-0a300fd6e3e0")
-	)
-	(wire
-		(pts
 			(xy 97.79 71.12) (xy 106.68 71.12)
 		)
 		(stroke
@@ -2926,13 +2549,13 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 110.49) (xy 392.43 110.49)
+			(xy 271.78 90.17) (xy 284.48 90.17)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "3c8b85ec-12f5-4ade-85d8-15d7127cabe1")
+		(uuid "3a9ff27c-45ac-4576-bef2-c5fd772aa985")
 	)
 	(wire
 		(pts
@@ -2966,13 +2589,13 @@
 	)
 	(wire
 		(pts
-			(xy 354.33 110.49) (xy 354.33 111.76)
+			(xy 284.48 99.06) (xy 284.48 100.33)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "46c0d375-34f8-44a4-9200-dcf55277cde2")
+		(uuid "4758b4a3-a4c6-4a8d-88c4-c422c2a308bf")
 	)
 	(wire
 		(pts
@@ -2996,6 +2619,16 @@
 	)
 	(wire
 		(pts
+			(xy 284.48 90.17) (xy 287.02 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4dad71c3-898b-4594-943d-e0c67cdc86e3")
+	)
+	(wire
+		(pts
 			(xy 177.8 91.44) (xy 176.53 91.44)
 		)
 		(stroke
@@ -3013,36 +2646,6 @@
 			(type default)
 		)
 		(uuid "4fac50d4-8bc1-4497-9c4b-b2aedfe46c84")
-	)
-	(wire
-		(pts
-			(xy 403.86 93.98) (xy 391.16 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5045396f-7712-4cfd-a262-91f3caae78b0")
-	)
-	(wire
-		(pts
-			(xy 379.73 81.28) (xy 391.16 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "51bdc8cd-8d4c-4ab1-9ea8-859255382d9a")
-	)
-	(wire
-		(pts
-			(xy 354.33 109.22) (xy 354.33 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "524333e8-9400-4d5f-8ba9-7e2323d3c7a9")
 	)
 	(wire
 		(pts
@@ -3086,26 +2689,6 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 120.65) (xy 354.33 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5de481b6-6dde-4ea9-a969-3edb4632ba57")
-	)
-	(wire
-		(pts
-			(xy 328.93 120.65) (xy 341.63 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "61296617-395b-486b-9378-6be95d0da624")
-	)
-	(wire
-		(pts
 			(xy 189.23 91.44) (xy 185.42 91.44)
 		)
 		(stroke
@@ -3126,26 +2709,6 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 111.76) (xy 379.73 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "68ae3235-8a82-4d3c-a1d0-13067d82cb54")
-	)
-	(wire
-		(pts
-			(xy 251.46 71.12) (xy 261.62 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "68f7a27f-f0b8-4cf4-9dc2-f813043db540")
-	)
-	(wire
-		(pts
 			(xy 97.79 99.06) (xy 97.79 100.33)
 		)
 		(stroke
@@ -3153,16 +2716,6 @@
 			(type default)
 		)
 		(uuid "693dbd94-b834-47da-9f0f-7f600337677a")
-	)
-	(wire
-		(pts
-			(xy 328.93 91.44) (xy 328.93 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6a5fe1fa-7222-4c96-b7f9-e839778ac6f3")
 	)
 	(wire
 		(pts
@@ -3196,26 +2749,6 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 81.28) (xy 354.33 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6efae219-4069-4d8c-ae12-afd67fb2e24b")
-	)
-	(wire
-		(pts
-			(xy 328.93 111.76) (xy 328.93 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "704bfee8-0044-45c8-96b2-bd9e32dd128e")
-	)
-	(wire
-		(pts
 			(xy 97.79 63.5) (xy 97.79 71.12)
 		)
 		(stroke
@@ -3223,26 +2756,6 @@
 			(type default)
 		)
 		(uuid "72548923-b746-4f82-b463-0431465c95d3")
-	)
-	(wire
-		(pts
-			(xy 367.03 81.28) (xy 379.73 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7313d930-ef41-47e6-a9ab-0343365629c8")
-	)
-	(wire
-		(pts
-			(xy 328.93 119.38) (xy 328.93 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7511140a-cde1-4817-b3e8-108f8ed27329")
 	)
 	(wire
 		(pts
@@ -3286,13 +2799,13 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 120.65) (xy 392.43 120.65)
+			(xy 271.78 71.12) (xy 290.83 71.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "7e5de818-923a-433e-b9de-193cdbba1d42")
+		(uuid "7bc2cb39-97ec-4a63-b66f-d08a66de637a")
 	)
 	(wire
 		(pts
@@ -3303,16 +2816,6 @@
 			(type default)
 		)
 		(uuid "7f76a4e2-348c-48c3-8227-2adfb77b009e")
-	)
-	(wire
-		(pts
-			(xy 266.7 78.74) (xy 261.62 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "802c5065-9428-4393-a20e-c3c3152e5104")
 	)
 	(wire
 		(pts
@@ -3356,16 +2859,6 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 93.98) (xy 367.03 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "82e9a245-236e-400d-baa5-3b2b6dc41948")
-	)
-	(wire
-		(pts
 			(xy 237.49 82.55) (xy 234.95 82.55)
 		)
 		(stroke
@@ -3373,26 +2866,6 @@
 			(type default)
 		)
 		(uuid "864f1f5f-4b46-4a0c-abe5-62d68d93c568")
-	)
-	(wire
-		(pts
-			(xy 354.33 91.44) (xy 354.33 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8682284a-a6aa-447f-9f78-da0db82a7dad")
-	)
-	(wire
-		(pts
-			(xy 354.33 95.25) (xy 354.33 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8a6a8e02-e1dc-4136-9d14-f8d47f992fa9")
 	)
 	(wire
 		(pts
@@ -3413,16 +2886,6 @@
 			(type default)
 		)
 		(uuid "8c7e4341-740c-4af2-912f-ed7bfd0e2b7b")
-	)
-	(wire
-		(pts
-			(xy 403.86 91.44) (xy 403.86 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8e972f0f-ce83-4bbb-a329-f428ff73b0f9")
 	)
 	(wire
 		(pts
@@ -3456,16 +2919,6 @@
 	)
 	(wire
 		(pts
-			(xy 392.43 111.76) (xy 392.43 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9161bb1b-f1e7-4326-9c43-4c4ce1a065bf")
-	)
-	(wire
-		(pts
 			(xy 252.73 91.44) (xy 252.73 92.71)
 		)
 		(stroke
@@ -3476,23 +2929,23 @@
 	)
 	(wire
 		(pts
-			(xy 261.62 71.12) (xy 266.7 71.12)
+			(xy 271.78 90.17) (xy 271.78 91.44)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "97c1efba-6883-40cc-bb0d-f31f07eb7246")
+		(uuid "95358aad-b8e3-4f20-8a51-d7cf7be260b3")
 	)
 	(wire
 		(pts
-			(xy 379.73 119.38) (xy 379.73 120.65)
+			(xy 251.46 71.12) (xy 271.78 71.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "98fa96f3-98c8-416a-99dc-0d12e9f9f89f")
+		(uuid "982247f7-651a-48e7-854e-f0bc2aa8bd9c")
 	)
 	(wire
 		(pts
@@ -3536,26 +2989,6 @@
 	)
 	(wire
 		(pts
-			(xy 367.03 120.65) (xy 367.03 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9dfe3128-fb73-441f-81b8-61ca0e07c9f5")
-	)
-	(wire
-		(pts
-			(xy 354.33 80.01) (xy 354.33 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e1c8cca-bdcb-42a7-94f0-faf73f7f1b21")
-	)
-	(wire
-		(pts
 			(xy 97.79 71.12) (xy 91.44 71.12)
 		)
 		(stroke
@@ -3576,26 +3009,6 @@
 	)
 	(wire
 		(pts
-			(xy 328.93 93.98) (xy 341.63 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a206ebd3-1e17-4dda-852e-cb521926c0d4")
-	)
-	(wire
-		(pts
-			(xy 391.16 91.44) (xy 391.16 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a50f31ca-80f8-41c9-a2c9-8ce3a9107f07")
-	)
-	(wire
-		(pts
 			(xy 363.22 199.39) (xy 363.22 200.66)
 		)
 		(stroke
@@ -3603,16 +3016,6 @@
 			(type default)
 		)
 		(uuid "a535ac23-f6bf-4cee-9c77-a23479034f3e")
-	)
-	(wire
-		(pts
-			(xy 261.62 78.74) (xy 261.62 77.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a6152973-3ecc-467b-b457-a0637664f5a2")
 	)
 	(wire
 		(pts
@@ -3626,16 +3029,6 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 91.44) (xy 379.73 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a75e6e04-4fa4-4088-9f5f-efa5ba46bdec")
-	)
-	(wire
-		(pts
 			(xy 176.53 71.12) (xy 176.53 72.39)
 		)
 		(stroke
@@ -3646,6 +3039,16 @@
 	)
 	(wire
 		(pts
+			(xy 271.78 71.12) (xy 271.78 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a99c0f62-e151-47d0-b616-7f12c0ea154b")
+	)
+	(wire
+		(pts
 			(xy 97.79 80.01) (xy 97.79 81.28)
 		)
 		(stroke
@@ -3653,26 +3056,6 @@
 			(type default)
 		)
 		(uuid "aa8b62f2-84af-43bb-9d67-5de4c86c82d1")
-	)
-	(wire
-		(pts
-			(xy 341.63 91.44) (xy 341.63 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b003f863-df4c-497f-bb5d-3f58a230ffb2")
-	)
-	(wire
-		(pts
-			(xy 354.33 120.65) (xy 354.33 121.92)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b07906cc-cf6b-43d5-ab22-b544d06c16f4")
 	)
 	(wire
 		(pts
@@ -3706,36 +3089,6 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 111.76) (xy 341.63 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b3adde7f-374a-4850-b7a7-2a188c054f15")
-	)
-	(wire
-		(pts
-			(xy 367.03 120.65) (xy 379.73 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b6d228a7-3815-4898-9ed0-bb1894b12762")
-	)
-	(wire
-		(pts
-			(xy 403.86 83.82) (xy 403.86 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b741f333-431b-45c1-b99e-717f15430392")
-	)
-	(wire
-		(pts
 			(xy 337.82 179.07) (xy 350.52 179.07)
 		)
 		(stroke
@@ -3746,6 +3099,16 @@
 	)
 	(wire
 		(pts
+			(xy 284.48 90.17) (xy 284.48 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc5f55f8-296d-4c76-82d6-224f27c39b9b")
+	)
+	(wire
+		(pts
 			(xy 337.82 179.07) (xy 337.82 180.34)
 		)
 		(stroke
@@ -3753,26 +3116,6 @@
 			(type default)
 		)
 		(uuid "bcdad584-179a-46f3-8efb-7dc4abf2de0a")
-	)
-	(wire
-		(pts
-			(xy 367.03 81.28) (xy 367.03 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "be40196a-9046-4f03-9da1-9062313e7e08")
-	)
-	(wire
-		(pts
-			(xy 354.33 119.38) (xy 354.33 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c02cb9d4-4c09-410d-bc84-6790753066f7")
 	)
 	(wire
 		(pts
@@ -3806,16 +3149,6 @@
 	)
 	(wire
 		(pts
-			(xy 354.33 81.28) (xy 367.03 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7da0670-aeb8-456d-ac7d-03060cc8ed7f")
-	)
-	(wire
-		(pts
 			(xy 66.04 71.12) (xy 76.2 71.12)
 		)
 		(stroke
@@ -3843,16 +3176,6 @@
 			(type default)
 		)
 		(uuid "cae4decd-283f-4534-bc95-1ffbcce33100")
-	)
-	(wire
-		(pts
-			(xy 354.33 120.65) (xy 367.03 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cb5ba2e1-c991-4d95-a08a-1c681566de84")
 	)
 	(wire
 		(pts
@@ -3906,13 +3229,13 @@
 	)
 	(wire
 		(pts
-			(xy 341.63 110.49) (xy 354.33 110.49)
+			(xy 271.78 99.06) (xy 271.78 100.33)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d390db93-5878-4eb0-96f9-4893eb21ed74")
+		(uuid "d4dbc07f-12dc-4f6a-a24b-3c0edf1a3836")
 	)
 	(wire
 		(pts
@@ -3966,16 +3289,6 @@
 	)
 	(wire
 		(pts
-			(xy 261.62 71.12) (xy 261.62 72.39)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d9547b78-a358-4bde-9299-e1a7794c87b0")
-	)
-	(wire
-		(pts
 			(xy 176.53 107.95) (xy 176.53 109.22)
 		)
 		(stroke
@@ -4003,36 +3316,6 @@
 			(type default)
 		)
 		(uuid "dbda57f8-95ac-40e3-820d-292d0ed7eb2f")
-	)
-	(wire
-		(pts
-			(xy 391.16 81.28) (xy 391.16 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "de7e1f7e-726f-454e-bfd2-0b446244165b")
-	)
-	(wire
-		(pts
-			(xy 341.63 93.98) (xy 354.33 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dfa73f8d-2bf8-4dea-8f04-c5e8b08dcfa7")
-	)
-	(wire
-		(pts
-			(xy 367.03 93.98) (xy 354.33 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dfe08832-d98a-4aae-9d19-786caa76d2a7")
 	)
 	(wire
 		(pts
@@ -4096,6 +3379,16 @@
 	)
 	(wire
 		(pts
+			(xy 271.78 80.01) (xy 271.78 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e697ffa2-7ad0-4a9f-9d2c-25055b3d3d68")
+	)
+	(wire
+		(pts
 			(xy 257.81 91.44) (xy 257.81 92.71)
 		)
 		(stroke
@@ -4103,26 +3396,6 @@
 			(type default)
 		)
 		(uuid "e808c322-fa9d-423d-9fd7-7a5e9399a587")
-	)
-	(wire
-		(pts
-			(xy 328.93 110.49) (xy 341.63 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e905d774-fbfa-46ff-b43f-1cde43c73444")
-	)
-	(wire
-		(pts
-			(xy 391.16 81.28) (xy 403.86 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ebb7c1f4-99bf-441f-a3b0-2bcd755c4fcf")
 	)
 	(wire
 		(pts
@@ -4163,26 +3436,6 @@
 			(type default)
 		)
 		(uuid "eecf038e-73b7-4a2c-9804-cbb6c3c9f41d")
-	)
-	(wire
-		(pts
-			(xy 367.03 91.44) (xy 367.03 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ef9fe350-7d19-4d6c-a632-2f6a510b9cfe")
-	)
-	(wire
-		(pts
-			(xy 379.73 93.98) (xy 391.16 93.98)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f0b4edb2-5d32-4c5f-8179-df3075433181")
 	)
 	(wire
 		(pts
@@ -4236,16 +3489,6 @@
 	)
 	(wire
 		(pts
-			(xy 354.33 81.28) (xy 354.33 83.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f7aaf5d8-3583-4263-9925-3403b7c6acd1")
-	)
-	(wire
-		(pts
 			(xy 363.22 181.61) (xy 363.22 189.23)
 		)
 		(stroke
@@ -4263,6 +3506,16 @@
 			(type default)
 		)
 		(uuid "fabf69da-9f56-4b3a-9f96-6c926fe5cc1d")
+	)
+	(wire
+		(pts
+			(xy 271.78 88.9) (xy 271.78 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb82838d-0b26-456b-8ffb-1de053421c3f")
 	)
 	(wire
 		(pts
@@ -15521,7 +14774,7 @@
 	)
 	(hierarchical_label "PhaseV_out"
 		(shape output)
-		(at 266.7 71.12 0)
+		(at 290.83 71.12 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15565,7 +14818,7 @@
 	)
 	(hierarchical_label "phV_Voltage"
 		(shape output)
-		(at 266.7 78.74 0)
+		(at 287.02 90.17 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15866,88 +15119,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:NetTie_2")
-		(at 261.62 74.93 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "08848699-9da4-475c-82d1-a655ffad365d")
-		(property "Reference" "NT2"
-			(at 262.89 74.93 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "NetTie_2"
-			(at 262.89 76.1999 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "NetTie:NetTie-2_SMD_Pad0.5mm"
-			(at 261.62 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 261.62 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Net tie, 2 pins"
-			(at 261.62 74.93 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6fd809cc-691c-447d-ac36-793c054da908")
-		)
-		(pin "2"
-			(uuid "7bdbd7cc-5916-4af8-bed3-9f4e70ca7f55")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "NT2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 176.53 104.14 0)
 		(mirror y)
@@ -16092,161 +15263,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 403.86 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "12e40d9a-d436-4310-9d98-96d6413a5c65")
-		(property "Reference" "C141"
-			(at 406.908 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 406.908 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 404.8252 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 403.86 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 402.336 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 403.86 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 402.336 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "3cf53421-db04-4bbf-87ad-f13c49778d04")
-		)
-		(pin "1"
-			(uuid "7e78c30c-01ab-47d7-b249-7041d7e545e0")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C141")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Bvrny's_library:IPT015N10N5")
 		(at 114.3 71.12 0)
 		(unit 1)
@@ -16359,6 +15375,83 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "Q6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 271.78 100.33 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "14b89d80-83cb-4b4e-bd4e-ea51f2d73ef8")
+		(property "Reference" "#PWR052"
+			(at 271.78 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 271.78 103.886 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 271.78 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 271.78 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 271.78 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2ab68a2b-02d7-41d2-9e17-268168a73336")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "#PWR052")
 					(unit 1)
 				)
 			)
@@ -16968,8 +16061,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 391.16 87.63 0)
+		(lib_id "power:GND")
+		(at 284.48 100.33 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16977,31 +16070,30 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "2f13a0fc-8fc0-434c-9187-2412ff55dd23")
-		(property "Reference" "C140"
-			(at 394.208 86.36 0)
+		(uuid "3c4d7647-dfbd-4ea2-a34e-e65331e3fa59")
+		(property "Reference" "#PWR056"
+			(at 284.48 106.68 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Value" "10uF"
-			(at 394.208 88.9 0)
+		(property "Value" "GND"
+			(at 284.48 103.886 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 392.1252 91.44 0)
+		(property "Footprint" ""
+			(at 284.48 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17012,7 +16104,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 391.16 87.63 0)
+			(at 284.48 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17022,8 +16114,8 @@
 				)
 			)
 		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 391.16 87.63 0)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 284.48 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17032,91 +16124,14 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 391.16 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 391.16 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 391.16 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 391.16 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 389.636 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 391.16 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 389.636 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "8d1d4037-129b-483d-b96b-5cf52b19615d")
 		)
 		(pin "1"
-			(uuid "448cdf97-35ef-474c-bfb8-859d203110fc")
+			(uuid "fabcfbcd-b9d8-47e4-93f1-164ee09a7d66")
 		)
 		(instances
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C140")
+					(reference "#PWR056")
 					(unit 1)
 				)
 			)
@@ -17386,161 +16401,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 354.33 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "439a366c-47b7-407b-920c-49e0ef4cae6d")
-		(property "Reference" "C123"
-			(at 357.378 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 357.378 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 355.2952 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 354.33 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 352.806 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 354.33 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 352.806 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "5c1f5ede-c7a0-45ab-94f4-746fb142a08b")
-		)
-		(pin "1"
-			(uuid "04b97a90-e2f2-4f78-8227-971c1d705c4e")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C123")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 97.79 104.14 0)
 		(unit 1)
@@ -17678,161 +16538,6 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "R33")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 379.73 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "57171ee7-2065-4c4b-b203-245166c668dd")
-		(property "Reference" "C128"
-			(at 382.524 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 382.524 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 380.6952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 379.73 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 378.206 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 379.73 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 378.206 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "84ef5a7b-18ac-4103-9b02-860177035508")
-		)
-		(pin "1"
-			(uuid "4d3ee03f-6178-4782-87a3-ab1d3a53cbd2")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C128")
 					(unit 1)
 				)
 			)
@@ -18126,161 +16831,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 367.03 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "622c3bdc-d9b3-4565-bc51-289e00c8a8f8")
-		(property "Reference" "C64"
-			(at 369.824 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 369.824 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 367.9952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 367.03 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 365.506 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 367.03 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 365.506 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "8464e095-912c-438d-bc0f-cdf077f62f5d")
-		)
-		(pin "1"
-			(uuid "330fa596-4e60-4a96-9e6b-9c79c153ee84")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C64")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Synapse:R")
 		(at 363.22 177.8 0)
 		(unit 1)
@@ -18422,549 +16972,6 @@
 					(variant
 						(name "No DNP components")
 					)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 354.33 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "662472d8-81c8-4df7-9b1f-e6c5e48a56ab")
-		(property "Reference" "C62"
-			(at 357.124 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 357.124 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 355.2952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 354.33 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 352.806 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 354.33 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 352.806 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "db928e29-96c9-4f5e-a402-dee75fd0914a")
-		)
-		(pin "1"
-			(uuid "bee71214-c5ce-4913-b29c-15343952b2ad")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C62")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 392.43 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6bfe2b3c-f0c8-4b09-a901-03cb706b65ef")
-		(property "Reference" "C142"
-			(at 395.224 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 395.224 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 393.3952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 392.43 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 390.906 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 392.43 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 390.906 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "1e12ad1e-cf42-42d3-9a9f-d4817453c10b")
-		)
-		(pin "1"
-			(uuid "c52758fb-c629-42c0-bd2b-64a63692f511")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C142")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 354.33 95.25 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6caa62fe-6757-4d96-ab67-5230cb5a6025")
-		(property "Reference" "#PWR0105"
-			(at 354.33 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 354.33 100.33 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 354.33 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 354.33 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 354.33 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "687e2f25-58ce-4749-857d-f3fc470b1514")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "#PWR0105")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 367.03 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6d545106-0e4e-4e4e-b969-6f280d95e44f")
-		(property "Reference" "C125"
-			(at 370.078 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 370.078 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 367.9952 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 367.03 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 365.506 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 367.03 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 365.506 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "caba675f-e929-4262-aa4d-6e1b72272cb2")
-		)
-		(pin "1"
-			(uuid "a6352504-c4c3-44f4-8d97-5f959fc8d20c")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C125")
-					(unit 1)
 				)
 			)
 		)
@@ -19517,6 +17524,149 @@
 	)
 	(symbol
 		(lib_id "Device:R")
+		(at 271.78 76.2 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "754f858b-96c3-47db-82b9-2bcaf7769902")
+		(property "Reference" "R35"
+			(at 275.59 74.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "51k"
+			(at 275.59 77.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 270.002 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 271.78 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "-55℃~+155℃ 125mW 150V 51kΩ Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS"
+			(at 271.78 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 271.78 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MFR.Part #" "0805W8F5102T5E"
+			(at 271.78 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "JLCPCB Part #" "C17737"
+			(at 271.78 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Package" "0805"
+			(at 271.78 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.635 0.635)
+				)
+			)
+		)
+		(property "Tolerance" "±1%"
+			(at 270.764 73.152 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(property "JLCPCB price" "https://jlcpcb.com/partdetail/18425-0805W8F5102T5E/C17737"
+			(at 271.78 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "30e11157-0f67-4cb0-a264-8b6612f678c0")
+		)
+		(pin "2"
+			(uuid "f3bb068d-800f-49c0-a235-a9fcdf2d0b5b")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "R35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
 		(at 87.63 99.06 90)
 		(unit 1)
 		(body_style 1)
@@ -19881,161 +18031,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 328.93 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8a5f3c43-aa54-4a8c-8012-ae34121e1aac")
-		(property "Reference" "C60"
-			(at 331.724 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 331.724 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 329.8952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 328.93 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 327.406 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 328.93 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 327.406 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "a7311c93-92f7-4ae8-a241-fe4440af180b")
-		)
-		(pin "1"
-			(uuid "bb464eda-03fb-491e-87c0-1a44e2268362")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C60")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 97.79 76.2 0)
 		(unit 1)
@@ -20317,161 +18312,6 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "R39")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 341.63 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "932174e8-bdf0-49df-8676-5ddd225e641d")
-		(property "Reference" "C121"
-			(at 344.678 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 344.678 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 342.5952 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 341.63 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 340.106 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 341.63 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 340.106 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "ecf42e80-d14a-452d-95d9-1a0bf48f1e8f")
-		)
-		(pin "1"
-			(uuid "d150927d-0535-43de-a37b-afaca689eb15")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C121")
 					(unit 1)
 				)
 			)
@@ -20850,161 +18690,6 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "#PWR048")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 341.63 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b65951e3-2c8b-4a4b-a3b2-1fc3c1424bfe")
-		(property "Reference" "C61"
-			(at 344.424 114.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 344.424 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 342.5952 119.38 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "CL21B104KCFNNNE "
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C28233"
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "0805"
-			(at 341.63 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 340.106 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/28983-CL21B104KCFNNNE/C28233"
-			(at 341.63 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 340.106 117.094 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "72648139-664e-4928-baa3-a6457988395b")
-		)
-		(pin "1"
-			(uuid "eeb2a185-b9b5-45dc-a177-02ff38941f91")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C61")
 					(unit 1)
 				)
 			)
@@ -21750,6 +19435,304 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 271.78 95.25 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d20f530d-7c1d-432c-9bc2-737845442f02")
+		(property "Reference" "R43"
+			(at 275.59 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4k7"
+			(at 275.59 96.52 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 270.002 95.25 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 271.78 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "-55℃~+155℃ 125mW 150V 4.7kΩ Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS"
+			(at 271.78 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 271.78 95.25 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MFR.Part #" "0805W8F4701T5E"
+			(at 271.78 95.25 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "JLCPCB Part #" "C17673"
+			(at 271.78 95.25 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Package" "0805"
+			(at 271.78 95.25 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.635 0.635)
+				)
+			)
+		)
+		(property "Tolerance" "±1%"
+			(at 270.764 92.202 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(property "JLCPCB price" "https://jlcpcb.com/partdetail/18361-0805W8F4701T5E/C17673"
+			(at 271.78 95.25 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c9287fe8-a1d3-49d4-b7a3-10e53f17240b")
+		)
+		(pin "2"
+			(uuid "663bd3b3-f260-4622-8468-3a5bcf92276b")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "R43")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 284.48 95.25 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d82a39f6-a7d7-4e9c-b4d8-8b2599a41ece")
+		(property "Reference" "C57"
+			(at 288.29 93.9799 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "3.3nF"
+			(at 288.29 96.5199 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 285.4452 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "3.3nF 50V X7R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" " Samsung Electro-Mechanics"
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MFR.Part #" "CL10B332KB8NNNC"
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "JLCPCB Part #" "C1613"
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Package" "0603"
+			(at 284.48 95.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.635 0.635)
+				)
+			)
+		)
+		(property "Voltage" "50V"
+			(at 282.956 93.726 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(property "JLCPCB price" "https://jlcpcb.com/partdetail/1965-CL10B332KB8NNNC/C1613"
+			(at 284.48 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Dielectric" "X7R"
+			(at 282.956 96.774 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "d8e7f62a-2016-4ebd-91c0-3752e68c69f2")
+		)
+		(pin "1"
+			(uuid "6d082783-daf4-40e2-a03d-6047e360d81f")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "C57")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:D_Schottky")
 		(at 181.61 91.44 0)
 		(mirror y)
@@ -22121,238 +20104,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 354.33 121.92 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "de53915b-21e5-484c-bd97-1413f90b2571")
-		(property "Reference" "#PWR053"
-			(at 354.33 128.27 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 354.33 125.476 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 354.33 121.92 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 354.33 121.92 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 354.33 121.92 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "41c0e798-e106-4211-8670-3d9380a54760")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "#PWR053")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 379.73 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e0415b87-786e-4efb-a4a2-efcb8dff6282")
-		(property "Reference" "C127"
-			(at 382.778 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 382.778 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 380.6952 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 379.73 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 378.206 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 379.73 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 378.206 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "5377da68-8b0d-4c51-bab3-dec761d55777")
-		)
-		(pin "1"
-			(uuid "f6aa1c3f-144d-4686-83a2-54358706e0bb")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C127")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Bvrny's_library:IPT015N10N5")
 		(at 114.3 99.06 0)
 		(unit 1)
@@ -22621,8 +20372,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+VSW")
-		(at 354.33 80.01 0)
+		(lib_id "Device:R")
+		(at 271.78 85.09 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -22630,11 +20381,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f18138f5-317b-4d90-a4b3-cdc89b793342")
-		(property "Reference" "#PWR0104"
-			(at 354.33 83.82 0)
-			(hide yes)
+		(uuid "f40bd14a-f5fa-4176-afc1-570e9e7e05bb")
+		(property "Reference" "R36"
+			(at 275.59 83.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22643,8 +20392,8 @@
 				)
 			)
 		)
-		(property "Value" "+VSYS"
-			(at 354.33 74.93 0)
+		(property "Value" "51k"
+			(at 275.59 86.36 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22653,8 +20402,8 @@
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 354.33 80.01 0)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 270.002 85.09 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22665,7 +20414,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 354.33 80.01 0)
+			(at 271.78 85.09 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22675,8 +20424,8 @@
 				)
 			)
 		)
-		(property "Description" "Power symbol creates a global label with name \"+VSW\""
-			(at 354.33 80.01 0)
+		(property "Description" "-55℃~+155℃ 125mW 150V 51kΩ Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS"
+			(at 271.78 85.09 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22686,32 +20435,8 @@
 				)
 			)
 		)
-		(pin "1"
-			(uuid "5d050922-c981-4e6c-b618-4e0de28abca7")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "#PWR0104")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+VSW")
-		(at 354.33 109.22 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f3457f05-fdb2-4fd9-b535-928fc9d4e5b1")
-		(property "Reference" "#PWR052"
-			(at 354.33 113.03 0)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 271.78 85.09 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22721,18 +20446,8 @@
 				)
 			)
 		)
-		(property "Value" "+VSYS"
-			(at 354.33 104.14 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 354.33 109.22 0)
+		(property "MFR.Part #" "0805W8F5102T5E"
+			(at 271.78 85.09 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22742,8 +20457,8 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
-			(at 354.33 109.22 0)
+		(property "JLCPCB Part #" "C17737"
+			(at 271.78 85.09 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22753,8 +20468,28 @@
 				)
 			)
 		)
-		(property "Description" "Power symbol creates a global label with name \"+VSW\""
-			(at 354.33 109.22 0)
+		(property "Package" "0805"
+			(at 271.78 85.09 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.635 0.635)
+				)
+			)
+		)
+		(property "Tolerance" "±1%"
+			(at 270.764 82.042 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(property "JLCPCB price" "https://jlcpcb.com/partdetail/18425-0805W8F5102T5E/C17737"
+			(at 271.78 85.09 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22765,12 +20500,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "dd8b5071-d21c-4fd4-84ac-5056b0f333fc")
+			(uuid "44db12c8-4e66-4872-abef-fc3d671d8bed")
+		)
+		(pin "2"
+			(uuid "c0f13f23-61fb-4d59-aea0-587d4bea1784")
 		)
 		(instances
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "#PWR052")
+					(reference "R36")
 					(unit 1)
 				)
 			)
@@ -22905,161 +20643,6 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "TH2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 328.93 87.63 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f9437e83-f34a-4649-a644-eb636c71a04f")
-		(property "Reference" "C119"
-			(at 331.978 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 331.978 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_1210_3225Metric"
-			(at 329.8952 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "100V 10uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " PSA(Prosperity Dielectrics)"
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "FS32X106K101EGG"
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C5156756"
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "1210"
-			(at 328.93 87.63 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Voltage" "100V"
-			(at 327.406 86.106 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/5791227-FS32X106K101EGG/C5156756"
-			(at 328.93 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Dielectric" "X7R"
-			(at 327.406 89.154 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "543607a1-3d7f-4ad4-83b5-53207b67fc26")
-		)
-		(pin "1"
-			(uuid "9d663efa-9165-4a89-a773-80da36557cc7")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "C119")
 					(unit 1)
 				)
 			)

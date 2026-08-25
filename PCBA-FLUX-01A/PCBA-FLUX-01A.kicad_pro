@@ -52,7 +52,7 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 1.0,
+          "corner_radius": 0.5,
           "corner_smoothing": 2,
           "fill_mode": 0,
           "hatch_gap": 1.5,
@@ -511,9 +511,9 @@
       {
         "bus_width": 12,
         "clearance": 0.2,
-        "diff_pair_gap": 0.25,
+        "diff_pair_gap": 0.23,
         "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
+        "diff_pair_width": 0.3,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
@@ -913,7 +913,7 @@
         "uuid": "27d049f2-0962-4d9e-88e1-d5cca5250f12"
       }
     ],
-    "used_designators": "TH2-3,J1-12,R3,R10,R24,R26-72,R74,R76-95,#PWR17-18,#PWR20-22,#PWR24,#PWR29-30,#PWR34-79,#PWR84-120,D6-13,U4-10,Q6-13,Q16-20,C4,C7,C11,C15,C19,C23,C26,C36,C38-42,C44,C46,C49,C51-82,C96-154,NT1-3",
+    "used_designators": "TH2-3,J1-25,R3,R10,R24,R26-72,R74,R76-95,#PWR17-18,#PWR20-22,#PWR24-25,#PWR29-30,#PWR34-80,#PWR84-120,D6-13,U4-10,Q6-13,Q16-20,C4,C7,C11,C15,C19,C23,C26,C36,C38-42,C44,C46,C49,C51-82,C96-154,NT1-3",
     "variants": [
       {
         "name": "No DNP components"
