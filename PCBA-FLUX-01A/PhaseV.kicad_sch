@@ -650,6 +650,148 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:NetTie_2"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "NT"
+				(at 0 1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "NetTie_2"
+				(at 0 -1.27 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Net tie, 2 pins"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "net tie short"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Net*Tie*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "NetTie_2_0_1"
+				(polyline
+					(pts
+						(xy -1.27 0) (xy 1.27 0)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "NetTie_2_1_1"
+				(pin passive line
+					(at -2.54 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:R"
 			(pin_numbers
 				(hide yes)
@@ -780,204 +922,6 @@
 						)
 					)
 					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Device:R_Shunt"
-			(pin_names
-				(offset 0)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "R"
-				(at -2.032 0 90)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "R_Shunt"
-				(at 0 0 90)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at -1.778 0 90)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Shunt resistor with Kelvin connections"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "R res shunt resistor"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "R_*Shunt*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "R_Shunt_0_1"
-				(rectangle
-					(start -1.016 -2.54)
-					(end 1.016 2.54)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 -2.54) (xy 1.27 -2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 2.54) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "R_Shunt_1_1"
-				(pin passive line
-					(at 0 5.08 270)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 2.54 180)
-					(length 1.27)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 -2.54 180)
-					(length 1.27)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -5.08 90)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2240,6 +2184,12 @@
 		(uuid "76639385-93d2-47a7-8dde-5cf55ba47830")
 	)
 	(junction
+		(at 241.3 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7778754e-cd2d-46fd-a451-6273f0c8b086")
+	)
+	(junction
 		(at 363.22 189.23)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2256,6 +2206,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8852385c-9ac3-4999-ba4c-7abb57639c77")
+	)
+	(junction
+		(at 251.46 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bb1d80f5-0bf4-4f0a-92aa-37668ed60074")
 	)
 	(junction
 		(at 255.27 92.71)
@@ -2449,6 +2405,16 @@
 	)
 	(wire
 		(pts
+			(xy 255.27 80.01) (xy 255.27 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24226142-27f4-4ed1-8144-c17d2dfcff39")
+	)
+	(wire
+		(pts
 			(xy 97.79 71.12) (xy 97.79 72.39)
 		)
 		(stroke
@@ -2509,16 +2475,6 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 78.74) (xy 255.27 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "341975d7-0529-4c3b-9846-9ba52a565d9a")
-	)
-	(wire
-		(pts
 			(xy 198.12 99.06) (xy 190.5 99.06)
 		)
 		(stroke
@@ -2576,16 +2532,6 @@
 			(type default)
 		)
 		(uuid "416d2d9f-b550-43ec-97af-1c6cca17e7a6")
-	)
-	(wire
-		(pts
-			(xy 243.84 73.66) (xy 243.84 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "446158b5-d4e1-4ec0-b04c-9828cebe0bcc")
 	)
 	(wire
 		(pts
@@ -2669,6 +2615,16 @@
 	)
 	(wire
 		(pts
+			(xy 251.46 71.12) (xy 250.19 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55008854-c8b5-4e91-94f2-8de808d9362f")
+	)
+	(wire
+		(pts
 			(xy 337.82 187.96) (xy 337.82 189.23)
 		)
 		(stroke
@@ -2686,6 +2642,16 @@
 			(type default)
 		)
 		(uuid "5be7cce7-de81-4260-90e7-bbe5122bcf77")
+	)
+	(wire
+		(pts
+			(xy 255.27 80.01) (xy 251.46 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c7356fb-c928-4b40-86db-afb332bab558")
 	)
 	(wire
 		(pts
@@ -2809,6 +2775,16 @@
 	)
 	(wire
 		(pts
+			(xy 242.57 71.12) (xy 241.3 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7f292059-5d15-4262-a33a-a0f5f95e2a94")
+	)
+	(wire
+		(pts
 			(xy 363.22 189.23) (xy 363.22 190.5)
 		)
 		(stroke
@@ -2916,6 +2892,16 @@
 			(type default)
 		)
 		(uuid "9015c257-12bb-4e38-a8b1-96b6be20bef9")
+	)
+	(wire
+		(pts
+			(xy 251.46 72.39) (xy 251.46 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "910fd1e3-bee8-4d43-9f29-e0800d7d5535")
 	)
 	(wire
 		(pts
@@ -3039,6 +3025,16 @@
 	)
 	(wire
 		(pts
+			(xy 237.49 80.01) (xy 241.3 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a81abf29-51d6-4513-a4e3-be0dbe050b2b")
+	)
+	(wire
+		(pts
 			(xy 271.78 71.12) (xy 271.78 72.39)
 		)
 		(stroke
@@ -3056,6 +3052,16 @@
 			(type default)
 		)
 		(uuid "aa8b62f2-84af-43bb-9d67-5de4c86c82d1")
+	)
+	(wire
+		(pts
+			(xy 241.3 71.12) (xy 241.3 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b11bc929-d9ef-4f71-9a8b-b89a38bbff55")
 	)
 	(wire
 		(pts
@@ -3189,6 +3195,16 @@
 	)
 	(wire
 		(pts
+			(xy 237.49 80.01) (xy 237.49 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ccc5e012-b5ed-49ec-ac15-48e312d5f30a")
+	)
+	(wire
+		(pts
 			(xy 240.03 91.44) (xy 240.03 92.71)
 		)
 		(stroke
@@ -3239,6 +3255,16 @@
 	)
 	(wire
 		(pts
+			(xy 251.46 77.47) (xy 251.46 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d4dd3e62-97d3-43e9-844f-b2c4b4c6a9bb")
+	)
+	(wire
+		(pts
 			(xy 96.52 91.44) (xy 97.79 91.44)
 		)
 		(stroke
@@ -3276,16 +3302,6 @@
 			(type default)
 		)
 		(uuid "d902d7d5-c46f-4490-a7c0-ac67665a0d52")
-	)
-	(wire
-		(pts
-			(xy 255.27 78.74) (xy 248.92 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d91c43c4-00a8-41df-8d51-f7580a3746d0")
 	)
 	(wire
 		(pts
@@ -3419,16 +3435,6 @@
 	)
 	(wire
 		(pts
-			(xy 237.49 78.74) (xy 243.84 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "edf364a2-0099-4877-b36a-afe6523f72ca")
-	)
-	(wire
-		(pts
 			(xy 337.82 195.58) (xy 337.82 189.23)
 		)
 		(stroke
@@ -3489,6 +3495,16 @@
 	)
 	(wire
 		(pts
+			(xy 241.3 77.47) (xy 241.3 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f829f9f3-a2a9-4c55-aa57-f8775f207acf")
+	)
+	(wire
+		(pts
 			(xy 363.22 181.61) (xy 363.22 189.23)
 		)
 		(stroke
@@ -3496,16 +3512,6 @@
 			(type default)
 		)
 		(uuid "f8b08305-a383-49b7-8c6f-c0530bdc79fc")
-	)
-	(wire
-		(pts
-			(xy 237.49 78.74) (xy 237.49 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fabf69da-9f56-4b3a-9f96-6c926fe5cc1d")
 	)
 	(wire
 		(pts
@@ -3556,16 +3562,6 @@
 			(type default)
 		)
 		(uuid "ff39dff5-d4da-4a4c-804f-9807b3d93c9a")
-	)
-	(wire
-		(pts
-			(xy 248.92 73.66) (xy 248.92 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ff3d66ff-ed98-40b5-9293-3e2445d7d94d")
 	)
 	(wire
 		(pts
@@ -14742,7 +14738,7 @@
 		)
 	)
 	(label "phV_Shunt+"
-		(at 243.84 78.74 180)
+		(at 241.3 80.01 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -14752,7 +14748,7 @@
 		(uuid "1c81aa25-814e-4f8e-856b-9474719b249a")
 	)
 	(label "phV_Shunt-"
-		(at 248.92 78.74 0)
+		(at 251.46 80.01 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15452,6 +15448,150 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "#PWR052")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 246.38 71.12 270)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1e72928e-2172-49f6-ad2c-331b599ad505")
+		(property "Reference" "R44"
+			(at 246.38 66.04 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1mR"
+			(at 246.38 68.58 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Bvrny's_library:R5930"
+			(at 246.38 72.898 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "0.1mΩ 15W SMD Shunt ±1% ±200ppm/℃ 5930 Current Sense Resistors / Shunt Resistors ROHS"
+			(at 246.38 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" " Shenzhen Yezhan Elec."
+			(at 246.38 71.12 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MFR.Part #" "ASR-S-7-0.1F "
+			(at 246.38 71.12 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "JLCPCB Part #" "C6075508"
+			(at 246.38 71.12 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Package" "5930"
+			(at 246.38 71.12 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.635 0.635)
+				)
+			)
+		)
+		(property "Tolerance" "±1% ±200ppm/C"
+			(at 240.284 70.358 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 0.508 0.508)
+				)
+			)
+		)
+		(property "JLCPCB price" "https://jlcpcb.com/partdetail/Shenzhen_Yezhan_Elec-ASR_S_7_01F/C6075508"
+			(at 246.38 71.12 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "dc054e61-3aac-4bc2-82bf-2d31da395b3f")
+		)
+		(pin "2"
+			(uuid "4ea6a46d-e01d-40c4-8e70-0139c5f118f1")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "R44")
 					(unit 1)
 				)
 			)
@@ -16825,6 +16965,171 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "R38")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:NetTie_2")
+		(at 251.46 74.93 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5dc072f3-578c-459a-98ef-ace546c34a44")
+		(property "Reference" "NT4"
+			(at 252.73 73.6599 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "NetTie_2"
+			(at 252.73 76.1999 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "NetTie:NetTie-2_SMD_Pad0.5mm"
+			(at 251.46 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Net tie, 2 pins"
+			(at 251.46 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "b75a33d4-caec-4cb4-b6a7-9687e0de4ec3")
+		)
+		(pin "1"
+			(uuid "654511f7-40d3-4fd8-af91-f26121b78d4a")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "NT4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:NetTie_2")
+		(at 241.3 74.93 270)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "63055e1e-c7f1-4525-acc6-714bd1afec8f")
+		(property "Reference" "NT3"
+			(at 240.03 73.6599 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "NetTie_2"
+			(at 240.03 76.1999 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "NetTie:NetTie-2_SMD_Pad0.5mm"
+			(at 241.3 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 241.3 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Net tie, 2 pins"
+			(at 241.3 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "de08a92a-ad98-4f68-b684-7975c1df59a7")
+		)
+		(pin "1"
+			(uuid "9469daaf-62c6-4e53-8a82-932250ca465f")
+		)
+		(instances
+			(project "PCBA-FLUX-01A"
+				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
+					(reference "NT3")
 					(unit 1)
 				)
 			)
@@ -20216,156 +20521,6 @@
 			(project "PCBA-FLUX-01A"
 				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
 					(reference "Q7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Shunt")
-		(at 246.38 71.12 90)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e63e7fd9-f8f6-4ee3-839d-cb70054f1435")
-		(property "Reference" "R44"
-			(at 246.38 64.77 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0.1mR"
-			(at 246.38 67.31 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Bvrny's_library:R5930"
-			(at 246.38 69.342 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 246.38 71.12 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "0.1mΩ 15W SMD Shunt ±1% ±200ppm/℃ 5930 Current Sense Resistors / Shunt Resistors ROHS"
-			(at 246.38 71.12 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" " Shenzhen Yezhan Elec."
-			(at 246.38 71.12 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MFR.Part #" "ASR-S-7-0.1F "
-			(at 246.38 71.12 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "JLCPCB Part #" "C6075508"
-			(at 246.38 71.12 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Package" "5930"
-			(at 246.38 71.12 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.635 0.635)
-				)
-			)
-		)
-		(property "Tolerance" "±1% ±200ppm/C"
-			(at 240.284 71.628 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 0.508 0.508)
-				)
-			)
-		)
-		(property "JLCPCB price" "https://jlcpcb.com/partdetail/Shenzhen_Yezhan_Elec-ASR_S_7_01F/C6075508"
-			(at 246.38 71.12 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "4"
-			(uuid "4aa77124-6972-429e-9a10-1ff879fcd3db")
-		)
-		(pin "1"
-			(uuid "4dfc4c12-0f34-49f1-8f46-8fc920ba2bab")
-		)
-		(pin "2"
-			(uuid "584e924b-04f8-45da-89c0-36a94ce807c3")
-		)
-		(pin "3"
-			(uuid "3a9e2737-d9dc-4771-9190-ae9c3ec5ab35")
-		)
-		(instances
-			(project "PCBA-FLUX-01A"
-				(path "/27d049f2-0962-4d9e-88e1-d5cca5250f12/8be822f4-70dc-41bd-a457-afdb13f44dff/15387549-54d2-4e59-b4cd-1d2aae829a6d"
-					(reference "R44")
 					(unit 1)
 				)
 			)
